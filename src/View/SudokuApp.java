@@ -38,7 +38,7 @@ public class SudokuApp extends Application {
 
         progressBar = new ProgressBar(0);
         progressBar.setPrefWidth(300);
-        progressBar.setVisible(false); // Initially invisible
+        progressBar.setVisible(false);
 
         Button createSudokuButton = new Button("Créer un Sudoku");
         createSudokuButton.setOnAction(_ -> {
@@ -55,12 +55,12 @@ public class SudokuApp extends Application {
                 @Override
                 protected void succeeded() {
                     createSudokuGrid(currentSudoku);
-                    progressBar.setVisible(false); // Hide progress bar when done
+                    progressBar.setVisible(false);
                 }
 
                 @Override
                 protected void running() {
-                    progressBar.setVisible(true); // Show progress bar when running
+                    progressBar.setVisible(true);
                 }
             };
 
@@ -81,7 +81,7 @@ public class SudokuApp extends Application {
         });
 
         sudokuGrid = new GridPane();
-        sudokuGrid.setPadding(new Insets(10));
+        sudokuGrid.setPadding(new Insets(30));
         sudokuGrid.setHgap(1);
         sudokuGrid.setVgap(1);
 
@@ -90,7 +90,7 @@ public class SudokuApp extends Application {
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Sudoku Generator");
-        primaryStage.sizeToScene(); // Adjust window size to fit content
+        primaryStage.sizeToScene();
         primaryStage.show();
     }
 
@@ -110,11 +110,19 @@ public class SudokuApp extends Application {
     private void createSudokuGrid(Sudoku sudoku) {
         sudokuGrid.getChildren().clear();
         int size = sudoku.getSize();
+        int dimension = 28;
+        if(size > 9) {
+            dimension = 34;
+        }
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
                 TextField cell = new TextField();
-                cell.setPrefWidth(30);
-                cell.setPrefHeight(30);
+                cell.setPrefHeight(dimension);
+                cell.setPrefWidth(dimension);
+                cell.setMaxHeight(dimension);
+                cell.setMaxWidth(dimension);
+                cell.setMinHeight(dimension);
+                cell.setMinWidth(dimension);
                 int value = sudoku.get(row, col);
                 if (value != 0) {
                     cell.setText(String.valueOf(value));
