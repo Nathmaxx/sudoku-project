@@ -82,10 +82,9 @@ public class SudokuApp extends Application {
 
         sudokuGrid = new GridPane();
         sudokuGrid.setPadding(new Insets(30));
-        sudokuGrid.setHgap(1);
-        sudokuGrid.setVgap(1);
 
-        root.getChildren().addAll(sizeComboBox, difficultyComboBox, createSudokuButton, solveSudokuButton, progressBar, sudokuGrid);
+        root.getChildren().addAll(sizeComboBox, difficultyComboBox, createSudokuButton, solveSudokuButton, progressBar,
+                sudokuGrid);
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
@@ -110,25 +109,41 @@ public class SudokuApp extends Application {
     private void createSudokuGrid(Sudoku sudoku) {
         sudokuGrid.getChildren().clear();
         int size = sudoku.getSize();
-        int dimension = 28;
-        if(size > 9) {
-            dimension = 34;
+        int sqrtSize = (int) Math.sqrt(size);
+        int cellSize = 28;
+
+        if (size > 9) {
+            cellSize = 34;
+        }
+        GridPane[][] subGrids = new GridPane[sqrtSize][sqrtSize];
+
+        for (int subRow = 0; subRow < sqrtSize; subRow++) {
+            for (int subCol = 0; subCol < sqrtSize; subCol++) {
+                GridPane subGrid = new GridPane();
+                subGrid.setStyle("-fx-border-color: gray; -fx-border-width: 2px;");
+                subGrids[subRow][subCol] = subGrid;
+                sudokuGrid.add(subGrid, subCol, subRow);
+            }
         }
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
                 TextField cell = new TextField();
-                cell.setPrefHeight(dimension);
-                cell.setPrefWidth(dimension);
-                cell.setMaxHeight(dimension);
-                cell.setMaxWidth(dimension);
-                cell.setMinHeight(dimension);
-                cell.setMinWidth(dimension);
+                cell.setPrefHeight(cellSize);
+                cell.setPrefWidth(cellSize);
+                cell.setMaxHeight(cellSize);
+                cell.setMaxWidth(cellSize);
+                cell.setMinHeight(cellSize);
+                cell.setMinWidth(cellSize);
+
                 int value = sudoku.get(row, col);
                 if (value != 0) {
                     cell.setText(String.valueOf(value));
                     cell.setEditable(false);
                 }
-                sudokuGrid.add(cell, col, row);
+                cell.setStyle("-fx-background-radius: 0; -fx-border-radius: 0;");
+                int subGridRow = row / sqrtSize;
+                int subGridCol = col / sqrtSize;
+                subGrids[subGridRow][subGridCol].add(cell, col % sqrtSize, row % sqrtSize);
             }
         }
     }
