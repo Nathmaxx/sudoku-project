@@ -1,5 +1,10 @@
 package Model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Solver {
 
     private Sudoku sudoku;
@@ -96,5 +101,21 @@ public class Solver {
             }
         }
         return false;
+    }
+
+    public List<Map.Entry<Integer, Integer>> solveSudokuWithSteps(int row, int col) {
+        Sudoku sudokuCopy = new Sudoku(this.sudoku);
+        Solver solver = new Solver(sudokuCopy);
+        solver.solveSudoku(row, col);
+
+        List<Map.Entry<Integer, Integer>> steps = new ArrayList<>();
+        for (int i = 0; i < this.sudoku.getSize(); i++) {
+            for (int j = 0; j < this.sudoku.getSize(); j++) {
+                if (this.sudoku.get(i, j) == 0 && sudokuCopy.get(i, j) != 0) {
+                    steps.add(new HashMap.SimpleEntry<>(i * this.sudoku.getSize() + j, sudokuCopy.get(i, j)));
+                }
+            }
+        }
+        return steps;
     }
 }

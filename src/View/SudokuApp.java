@@ -14,6 +14,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.animation.SequentialTransition;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+
+import java.util.List;
+import java.util.Map;
 
 public class SudokuApp extends Application {
 
@@ -21,6 +27,8 @@ public class SudokuApp extends Application {
     private int gridSize = 9;
     private Sudoku currentSudoku;
     private ProgressBar progressBar;
+    private List<Map.Entry<Integer, Integer>> steps;
+    private int currentStepIndex = 0;
 
     @Override
     public void start(Stage primaryStage) {
@@ -42,6 +50,8 @@ public class SudokuApp extends Application {
 
         Button createSudokuButton = new Button("Créer un Sudoku");
         createSudokuButton.setOnAction(_ -> {
+            currentStepIndex = 0;
+            steps = null;
             int percentage = getRemovalPercentage(difficultyComboBox.getValue());
             Task<Void> task = new Task<Void>() {
                 @Override
@@ -80,10 +90,38 @@ public class SudokuApp extends Application {
             }
         });
 
+        Button solveSudokuWithStepButton = new Button("Résoudre l'étape suivante");
+        solveSudokuWithStepButton.setOnAction(_ -> {
+            if (currentSudoku != null) {
+                System.out.println("Solving step " + currentStepIndex);
+                if (steps == null) {
+                    System.out.println("First IF Solving Sudoku with steps");
+                    Solver solver = new Solver(currentSudoku);
+                    steps = solver.solveSudokuWithSteps(0, 0);
+                    currentStepIndex = 0;
+                    System.out.println("Nombre d'étapes: " + steps.size());
+                }
+                if (currentStepIndex < steps.size()) {
+                    Map.Entry<Integer, Integer> step = steps.get(currentStepIndex);
+                    int position = step.getKey();
+                    int value = step.getValue();
+                    int row = position / currentSudoku.getSize();
+                    int col = position % currentSudoku.getSize();
+                    currentSudoku.set(row, col, value);
+                    System.out.println("Setting " + value + " at position " + row + ", " + col);
+                    createSudokuGrid(currentSudoku);
+                    System.out.println("Step " + currentStepIndex + " done");
+                    currentStepIndex++;
+                } else {
+                    System.out.println("Sudoku solved");
+                }
+            }
+        });
+
         sudokuGrid = new GridPane();
         sudokuGrid.setPadding(new Insets(30));
 
-        root.getChildren().addAll(sizeComboBox, difficultyComboBox, createSudokuButton, solveSudokuButton, progressBar,
+        root.getChildren().addAll(sizeComboBox, difficultyComboBox, createSudokuButton, solveSudokuButton, solveSudokuWithStepButton, progressBar,
                 sudokuGrid);
 
         Scene scene = new Scene(root);
