@@ -38,7 +38,7 @@ public class SudokuApp extends Application {
         ComboBox<Integer> sizeComboBox = new ComboBox<>();
         sizeComboBox.getItems().addAll(4, 9, 16, 25, 36, 49);
         sizeComboBox.setValue(gridSize);
-        sizeComboBox.setOnAction(_ -> gridSize = sizeComboBox.getValue());
+        sizeComboBox.setOnAction(event -> gridSize = sizeComboBox.getValue());
 
         ComboBox<String> difficultyComboBox = new ComboBox<>();
         difficultyComboBox.getItems().addAll("Facile", "Moyen", "Difficile");
@@ -49,9 +49,7 @@ public class SudokuApp extends Application {
         progressBar.setVisible(false);
 
         Button createSudokuButton = new Button("Créer un Sudoku");
-        createSudokuButton.setOnAction(_ -> {
-            currentStepIndex = 0;
-            steps = null;
+        createSudokuButton.setOnAction(event -> {
             int percentage = getRemovalPercentage(difficultyComboBox.getValue());
             Task<Void> task = new Task<Void>() {
                 @Override
@@ -79,7 +77,7 @@ public class SudokuApp extends Application {
         });
 
         Button solveSudokuButton = new Button("Résoudre");
-        solveSudokuButton.setOnAction(_ -> {
+        solveSudokuButton.setOnAction(event -> {
             if (currentSudoku != null) {
                 Solver solver = new Solver(currentSudoku);
                 if (solver.solveSudoku(0, 0)) {
@@ -91,7 +89,7 @@ public class SudokuApp extends Application {
         });
 
         Button solveSudokuWithStepButton = new Button("Résoudre l'étape suivante");
-        solveSudokuWithStepButton.setOnAction(_ -> {
+        solveSudokuWithStepButton.setOnAction(event -> {
             if (currentSudoku != null) {
                 System.out.println("Solving step " + currentStepIndex);
                 if (steps == null) {
@@ -121,7 +119,8 @@ public class SudokuApp extends Application {
         sudokuGrid = new GridPane();
         sudokuGrid.setPadding(new Insets(30));
 
-        root.getChildren().addAll(sizeComboBox, difficultyComboBox, createSudokuButton, solveSudokuButton, solveSudokuWithStepButton, progressBar,
+        root.getChildren().addAll(sizeComboBox, difficultyComboBox, createSudokuButton, solveSudokuButton,
+                solveSudokuWithStepButton, progressBar,
                 sudokuGrid);
 
         Scene scene = new Scene(root);
