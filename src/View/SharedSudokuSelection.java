@@ -25,8 +25,9 @@ public class SharedSudokuSelection extends Application {
 
         Button selectButton = new Button("Select Sudoku");
         selectButton.setOnAction(event -> {
-            // Navigate to the SharedSudokuDisplay page
-            SharedSudokuDisplay sharedSudokuDisplay = new SharedSudokuDisplay();
+            String selectedPattern = patternComboBox.getValue();
+            String selectedDifficulty = difficultyComboBox.getValue();
+            SharedSudokuDisplay sharedSudokuDisplay = new SharedSudokuDisplay(selectedPattern, selectedDifficulty);
             try {
                 sharedSudokuDisplay.start(new Stage());
                 primaryStage.close();

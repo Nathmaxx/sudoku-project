@@ -37,7 +37,7 @@ public class Acceuil extends Application {
         hbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
 
-        Scene scene = new Scene(vbox, 300, 200);
+        Scene scene = new Scene(vbox, 500, 500);
 
         primaryStage.setScene(scene);
         primaryStage.show();
