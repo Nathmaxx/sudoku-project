@@ -15,10 +15,11 @@ import javafx.geometry.Pos;
 
 public class SharedSudokuDisplay extends Application {
 
-    private SharedSudoku sharedSudoku;
+    private SharedSudoku sharedSudoku1;
+    private SharedSudoku sharedSudoku2;
     private String pattern;
     private String difficulty;
-    private GridPane sudokuGrid;
+    private GridPane mergedSudokuGrid;
 
     public SharedSudokuDisplay(String pattern, String difficulty) {
         this.pattern = pattern;
@@ -32,66 +33,64 @@ public class SharedSudokuDisplay extends Application {
         System.out.println("Selected pattern: " + pattern);
         System.out.println("Selected difficulty: " + difficulty);
 
-        int[][] sampleBoard = {
-                {5, 3, 0, 0, 7, 0, 0, 0, 0},
-                {6, 0, 0, 1, 9, 5, 0, 0, 0},
-                {0, 9, 8, 0, 0, 0, 0, 6, 0},
-                {8, 0, 0, 0, 6, 0, 0, 0, 3},
-                {4, 0, 0, 8, 0, 3, 0, 0, 1},
-                {7, 0, 0, 0, 2, 0, 0, 0, 6},
-                {0, 6, 0, 0, 0, 0, 2, 8, 0},
-                {0, 0, 0, 4, 1, 9, 0, 0, 5},
-                {0, 0, 0, 0, 8, 0, 0, 7, 9}
-        };
-        SharedArea sharedArea = new SharedArea(sampleBoard);
-        sharedSudoku = new SharedSudoku(sampleBoard, sharedArea);
+        if ("Pattern 1".equals(pattern)) {
+            createPattern1Sudokus();
+        }
 
-        sudokuGrid = new GridPane();
-        sudokuGrid.setPadding(new Insets(30));
-
-        createSudokuGrid(sharedSudoku);
+        mergedSudokuGrid = new GridPane();
+        mergedSudokuGrid.setPadding(new Insets(30));
+        createMergedSudokuGrid();
 
         Button solveButton = new Button("Solve Sudoku");
         solveButton.setOnAction(event -> {
-            Solver solver = new Solver(sharedSudoku);
-            if (solver.solveSudoku(0, 0)) {
-                createSudokuGrid(sharedSudoku);
-                System.out.println("Sudoku solved!");
+            Solver solver1 = new Solver(sharedSudoku1);
+            Solver solver2 = new Solver(sharedSudoku2);
+            if (solver1.solveSudoku(0, 0) && solver2.solveSudoku(0, 0)) {
+                createMergedSudokuGrid();
+                System.out.println("Sudokus solved!");
             } else {
-                System.out.println("Unable to solve Sudoku.");
+                System.out.println("Unable to solve Sudokus.");
             }
         });
 
-        VBox vbox = new VBox(10, sudokuGrid, solveButton);
+        VBox vbox = new VBox(10, mergedSudokuGrid, solveButton);
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
 
-        Scene scene = new Scene(vbox, 400, 400);
+        Scene scene = new Scene(vbox, 600, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void createSudokuGrid(SharedSudoku sudoku) {
-        sudokuGrid.getChildren().clear();
-        int size = sudoku.getSize();
-        int sqrtSize = (int) Math.sqrt(size);
-        int cellSize = 28;
+    private void createPattern1Sudokus() {
+        int[][] board1 = new int[9][9];
+        int[][] board2 = new int[9][9];
+        int[][] sharedSquare = {
+                {5, 3, 0},
+                {6, 0, 0},
+                {0, 9, 8}
+        };
 
-        if (size > 9) {
-            cellSize = 34;
-        }
-        GridPane[][] subGrids = new GridPane[sqrtSize][sqrtSize];
-
-        for (int subRow = 0; subRow < sqrtSize; subRow++) {
-            for (int subCol = 0; subCol < sqrtSize; subCol++) {
-                GridPane subGrid = new GridPane();
-                subGrid.setStyle("-fx-border-color: gray; -fx-border-width: 2px;");
-                subGrids[subRow][subCol] = subGrid;
-                sudokuGrid.add(subGrid, subCol, subRow);
+        // Fill the shared 3x3 square in both boards
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                board1[6 + i][6 + j] = sharedSquare[i][j];
+                board2[i][j] = sharedSquare[i][j];
             }
         }
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
+
+        SharedArea sharedArea = new SharedArea(sharedSquare);
+        sharedSudoku1 = new SharedSudoku(board1, sharedArea);
+        sharedSudoku2 = new SharedSudoku(board2, sharedArea);
+    }
+
+    private void createMergedSudokuGrid() {
+        mergedSudokuGrid.getChildren().clear();
+        int cellSize = 28;
+
+        // Create the first Sudoku grid
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
                 TextField cell = new TextField();
                 cell.setPrefHeight(cellSize);
                 cell.setPrefWidth(cellSize);
@@ -100,15 +99,55 @@ public class SharedSudokuDisplay extends Application {
                 cell.setMinHeight(cellSize);
                 cell.setMinWidth(cellSize);
 
-                int value = sudoku.get(row, col);
+                int value = sharedSudoku1.get(row, col);
                 if (value != 0) {
                     cell.setText(String.valueOf(value));
                     cell.setEditable(false);
                 }
                 cell.setStyle("-fx-background-radius: 0; -fx-border-radius: 0;");
-                int subGridRow = row / sqrtSize;
-                int subGridCol = col / sqrtSize;
-                subGrids[subGridRow][subGridCol].add(cell, col % sqrtSize, row % sqrtSize);
+                mergedSudokuGrid.add(cell, col, row);
+            }
+        }
+
+        // Create the second Sudoku grid
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                TextField cell = new TextField();
+                cell.setPrefHeight(cellSize);
+                cell.setPrefWidth(cellSize);
+                cell.setMaxHeight(cellSize);
+                cell.setMaxWidth(cellSize);
+                cell.setMinHeight(cellSize);
+                cell.setMinWidth(cellSize);
+
+                int value = sharedSudoku2.get(row, col);
+                if (value != 0) {
+                    cell.setText(String.valueOf(value));
+                    cell.setEditable(false);
+                }
+                cell.setStyle("-fx-background-radius: 0; -fx-border-radius: 0;");
+                mergedSudokuGrid.add(cell, col + 10, row + 10);
+            }
+        }
+
+        // Create the shared 3x3 grid
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                TextField cell = new TextField();
+                cell.setPrefHeight(cellSize);
+                cell.setPrefWidth(cellSize);
+                cell.setMaxHeight(cellSize);
+                cell.setMaxWidth(cellSize);
+                cell.setMinHeight(cellSize);
+                cell.setMinWidth(cellSize);
+
+                int value = sharedSudoku1.get(6 + i, 6 + j);
+                if (value != 0) {
+                    cell.setText(String.valueOf(value));
+                    cell.setEditable(false);
+                }
+                cell.setStyle("-fx-background-radius: 0; -fx-border-radius: 0;");
+                mergedSudokuGrid.add(cell, j + 10, i + 10);
             }
         }
     }
