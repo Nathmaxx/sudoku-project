@@ -112,7 +112,7 @@ public class SharedSudokuDisplay extends Application {
 
         // Create the second Sudoku grid
         for (int row = 0; row < 9; row++) {
-            for (int col = 0; col < 9; col++) {
+            for (int col = 6; col < 15; col++) {
                 if (row < 3 && col < 3) continue; // Skip the shared area
                 TextField cell = new TextField();
                 cell.setPrefHeight(cellSize);
@@ -122,13 +122,13 @@ public class SharedSudokuDisplay extends Application {
                 cell.setMinHeight(cellSize);
                 cell.setMinWidth(cellSize);
 
-                int value = sharedSudoku2.get(row, col);
+                int value = sharedSudoku2.get(row, col-6);
                 if (value != 0) {
                     cell.setText(String.valueOf(value));
                     cell.setEditable(false);
                 }
                 cell.setStyle("-fx-background-radius: 0; -fx-border-radius: 0;");
-                mergedSudokuGrid.add(cell, col, row + 9);
+                mergedSudokuGrid.add(cell, col, row + 6);
             }
         }
 
