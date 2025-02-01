@@ -57,7 +57,7 @@ public class SharedSudokuDisplay extends Application {
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
 
-        Scene scene = new Scene(vbox, 600, 600);
+        Scene scene = new Scene(vbox, 600, 800);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -91,6 +91,7 @@ public class SharedSudokuDisplay extends Application {
         // Create the first Sudoku grid
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
+                if (row >= 6 && col >= 6) continue; // Skip the shared area
                 TextField cell = new TextField();
                 cell.setPrefHeight(cellSize);
                 cell.setPrefWidth(cellSize);
@@ -112,6 +113,7 @@ public class SharedSudokuDisplay extends Application {
         // Create the second Sudoku grid
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
+                if (row < 3 && col < 3) continue; // Skip the shared area
                 TextField cell = new TextField();
                 cell.setPrefHeight(cellSize);
                 cell.setPrefWidth(cellSize);
@@ -126,7 +128,7 @@ public class SharedSudokuDisplay extends Application {
                     cell.setEditable(false);
                 }
                 cell.setStyle("-fx-background-radius: 0; -fx-border-radius: 0;");
-                mergedSudokuGrid.add(cell, col + 10, row + 10);
+                mergedSudokuGrid.add(cell, col, row + 9);
             }
         }
 
@@ -147,7 +149,7 @@ public class SharedSudokuDisplay extends Application {
                     cell.setEditable(false);
                 }
                 cell.setStyle("-fx-background-radius: 0; -fx-border-radius: 0;");
-                mergedSudokuGrid.add(cell, j + 10, i + 10);
+                mergedSudokuGrid.add(cell, j + 6, i + 6);
             }
         }
     }
