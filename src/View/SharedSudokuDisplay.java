@@ -3,6 +3,7 @@ package View;
 import Model.SharedSudoku;
 import Model.SharedArea;
 import Model.Solver;
+import Model.SudokuCreator;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -63,23 +64,32 @@ public class SharedSudokuDisplay extends Application {
     }
 
     private void createPattern1Sudokus() {
-        int[][] board1 = new int[9][9];
-        int[][] board2 = new int[9][9];
-        int[][] sharedSquare = {
-                {5, 3, 0},
-                {6, 0, 0},
-                {0, 9, 8}
-        };
+        // Generate the first Sudoku
+        SudokuCreator sudokuCreator1 = new SudokuCreator(9);
+        int[][] board1 = sudokuCreator1.generateSudoku(9, 60).getBoard();
 
-        // Fill the shared 3x3 square in both boards
+        // Extract the shared 3x3 square from the first Sudoku
+        int[][] sharedSquare = new int[3][3];
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                board1[6 + i][6 + j] = sharedSquare[i][j];
-                board2[i][j] = sharedSquare[i][j];
+                sharedSquare[i][j] = board1[6 + i][6 + j];
             }
         }
 
+        // Create the shared area
         SharedArea sharedArea = new SharedArea(sharedSquare);
+
+        // Generate the second Sudoku with the shared area filled
+        int[][] board2 = new int[9][9];
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                board2[i][j] = sharedSquare[i][j];
+            }
+        }
+        SudokuCreator sudokuCreator2 = new SudokuCreator(9);
+        board2 = sudokuCreator2.generateSudokuWithPreFilled(9, 60, board2).getBoard();
+
+        // Create the shared Sudokus
         sharedSudoku1 = new SharedSudoku(board1, sharedArea);
         sharedSudoku2 = new SharedSudoku(board2, sharedArea);
     }

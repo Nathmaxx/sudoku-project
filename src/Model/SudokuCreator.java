@@ -95,4 +95,26 @@ public class SudokuCreator {
             progressListener.accept(progress);
         }
     }
+
+    public Sudoku generateSudokuWithPreFilled(int size, int removalPercentage, int[][] preFilled) {
+        this.sudoku = new Sudoku(size);
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                this.sudoku.set(i, j, preFilled[i][j]);
+            }
+        }
+
+        fillRemainingCells();
+
+        removeNumbers(removalPercentage);
+
+        return this.sudoku;
+    }
+
+    private void fillRemainingCells() {
+        int size = this.sudoku.getSize();
+        Solver solver = new Solver(this.sudoku);
+        solver.solveSudoku(0, 0);
+    }
 }
