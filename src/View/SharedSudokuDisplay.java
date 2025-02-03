@@ -18,6 +18,7 @@ public class SharedSudokuDisplay extends Application {
 
     private SharedSudoku sharedSudoku1;
     private SharedSudoku sharedSudoku2;
+    private SharedSudoku sharedSudoku3;
     private String pattern;
     private String difficulty;
     private GridPane mergedSudokuGrid;
@@ -36,6 +37,8 @@ public class SharedSudokuDisplay extends Application {
 
         if ("Pattern 1".equals(pattern)) {
             createPattern1Sudokus();
+        } else if ("Pattern 2".equals(pattern)) {
+            createPattern2Sudokus();
         }
 
         mergedSudokuGrid = new GridPane();
@@ -43,33 +46,7 @@ public class SharedSudokuDisplay extends Application {
         createMergedSudokuGrid();
 
         Button solveButton = new Button("Solve Sudoku");
-        solveButton.setOnAction(event -> {
-            Solver solver1 = new Solver(sharedSudoku1);
-            if (solver1.solveSudoku(0, 0)) {
-                Solver solver2 = new Solver(sharedSudoku2);
-                //display the sharedSudoku2
-                System.out.println("Shared Sudoku 2 BEFORE: ");
-                System.out.println(sharedSudoku2.toString());
-                if (solver2.solveSudoku(0, 0)) {
-                    //sysout sharedSudoku2
-                    System.out.println("Shared Sudoku 2 AFTER: ");
-                    System.out.println(sharedSudoku2.toString());
-                    createMergedSudokuGrid();
-                    System.out.println("Sudokus solved!");
-                } else {
-                    System.out.println("Unable to solve the second Sudoku. Trying another solution for the first Sudoku.");
-                    sharedSudoku1 = new SharedSudoku(sharedSudoku1.getBoard(), sharedSudoku1.getSharedAreas());
-                    if (solver1.solveSudoku(0, 0) && solver2.solveSudoku(0, 0)) {
-                        createMergedSudokuGrid();
-                        System.out.println("Sudokus solved with another solution for the first Sudoku!");
-                    } else {
-                        System.out.println("Unable to solve Sudokus.");
-                    }
-                }
-            } else {
-                System.out.println("Unable to solve the first Sudoku.");
-            }
-        });
+        solveButton.setOnAction(event -> solveBothSudokus());
 
         VBox vbox = new VBox(10, mergedSudokuGrid, solveButton);
         vbox.setAlignment(Pos.CENTER);
@@ -96,10 +73,6 @@ public class SharedSudokuDisplay extends Application {
         // Create the shared area
         SharedArea sharedArea = new SharedArea(sharedSquare);
 
-        //sysout sharedArea
-        System.out.println("Shared Area: ");
-        sharedArea.print();
-
         // Generate the second Sudoku with the shared area filled
         int[][] board2 = new int[9][9];
         for (int i = 0; i < 3; i++) {
@@ -107,29 +80,68 @@ public class SharedSudokuDisplay extends Application {
                 board2[i][j] = sharedSquare[i][j];
             }
         }
-        //sysout board2
-        System.out.println("Board 2: ");
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                System.out.print(board2[i][j] + " ");
+
+        SudokuCreator sudokuCreator2 = new SudokuCreator(9);
+        board2 = sudokuCreator2.generateSudokuWithPreFilled(9, 60, board2, 0, 0, 2, 2).getBoard();
+
+        // Create the shared Sudokus
+        sharedSudoku1 = new SharedSudoku(board1, sharedArea);
+        sharedSudoku2 = new SharedSudoku(board2, sharedArea);
+    }
+
+    private void createPattern2Sudokus() {
+        // Generate the first Sudoku
+        SudokuCreator sudokuCreator1 = new SudokuCreator(9);
+        int[][] board1 = sudokuCreator1.generateSudoku(9, 60).getBoard();
+
+        // Extract the first shared 3x3 square from the first Sudoku
+        int[][] sharedSquare1 = new int[3][3];
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                sharedSquare1[i][j] = board1[6 + i][6 + j];
             }
-            System.out.println();
+        }
+
+        // Create the first shared area
+        SharedArea sharedArea1 = new SharedArea(sharedSquare1);
+
+        // Generate the second Sudoku with the first shared area filled
+        int[][] board2 = new int[9][9];
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                board2[i][j] = sharedSquare1[i][j];
+            }
         }
 
         SudokuCreator sudokuCreator2 = new SudokuCreator(9);
         board2 = sudokuCreator2.generateSudokuWithPreFilled(9, 60, board2, 0, 0, 2, 2).getBoard();
 
-        //sysout board2
-        System.out.println("Board 2 AFTERGEN: ");
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                System.out.print(board2[i][j] + " ");
+        // Extract the second shared 3x3 square from the second Sudoku
+        int[][] sharedSquare2 = new int[3][3];
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                sharedSquare2[i][j] = board2[3 + i][3 + j];
             }
-            System.out.println();
         }
+
+        // Create the second shared area
+        SharedArea sharedArea2 = new SharedArea(sharedSquare2);
+
+        // Generate the third Sudoku with the second shared area filled
+        int[][] board3 = new int[9][9];
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                board3[i][j] = sharedSquare2[i][j];
+            }
+        }
+
+        SudokuCreator sudokuCreator3 = new SudokuCreator(9);
+        board3 = sudokuCreator3.generateSudokuWithPreFilled(9, 60, board3, 0, 0, 2, 2).getBoard();
+
         // Create the shared Sudokus
-        sharedSudoku1 = new SharedSudoku(board1, sharedArea);
-        sharedSudoku2 = new SharedSudoku(board2, sharedArea);
+        sharedSudoku1 = new SharedSudoku(board1, new SharedArea[]{sharedArea1, sharedArea2});
+        sharedSudoku2 = new SharedSudoku(board2, sharedArea1);
+        sharedSudoku3 = new SharedSudoku(board3, sharedArea2);
     }
 
     private void createMergedSudokuGrid() {
@@ -180,7 +192,29 @@ public class SharedSudokuDisplay extends Application {
             }
         }
 
-        // Create the shared 3x3 grid
+        // Create the third Sudoku grid
+        for (int row = 0; row < 9; row++) {
+            for (int col = 12; col < 21; col++) {
+                if (row < 3 && col < 3) continue; // Skip the shared area
+                TextField cell = new TextField();
+                cell.setPrefHeight(cellSize);
+                cell.setPrefWidth(cellSize);
+                cell.setMaxHeight(cellSize);
+                cell.setMaxWidth(cellSize);
+                cell.setMinHeight(cellSize);
+                cell.setMinWidth(cellSize);
+
+                int value = sharedSudoku3.get(row, col - 12);
+                if (value != 0) {
+                    cell.setText(String.valueOf(value));
+                    cell.setEditable(false);
+                }
+                cell.setStyle("-fx-background-radius: 0; -fx-border-radius: 0;");
+                mergedSudokuGrid.add(cell, col, row + 12);
+            }
+        }
+
+        // Create the shared 3x3 grids
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 TextField cell = new TextField();
@@ -199,6 +233,19 @@ public class SharedSudokuDisplay extends Application {
                 cell.setStyle("-fx-background-radius: 0; -fx-border-radius: 0;");
                 mergedSudokuGrid.add(cell, j + 6, i + 6);
             }
+        }
+    }
+
+    private void solveBothSudokus() {
+        Solver solver1 = new Solver(sharedSudoku1);
+        Solver solver2 = new Solver(sharedSudoku2);
+        Solver solver3 = new Solver(sharedSudoku3);
+
+        if (solver1.solveSudoku(0, 0) && solver2.solveSudoku(0, 0) && solver3.solveSudoku(0, 0)) {
+            createMergedSudokuGrid();
+            System.out.println("All Sudokus solved!");
+        } else {
+            System.out.println("Unable to solve all Sudokus.");
         }
     }
 
