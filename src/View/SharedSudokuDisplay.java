@@ -192,25 +192,27 @@ public class SharedSudokuDisplay extends Application {
             }
         }
 
-        // Create the third Sudoku grid
-        for (int row = 0; row < 9; row++) {
-            for (int col = 12; col < 21; col++) {
-                if (row < 3 && col < 3) continue; // Skip the shared area
-                TextField cell = new TextField();
-                cell.setPrefHeight(cellSize);
-                cell.setPrefWidth(cellSize);
-                cell.setMaxHeight(cellSize);
-                cell.setMaxWidth(cellSize);
-                cell.setMinHeight(cellSize);
-                cell.setMinWidth(cellSize);
+        // Create the third Sudoku grid if it exists
+        if (sharedSudoku3 != null) {
+            for (int row = 0; row < 9; row++) {
+                for (int col = 12; col < 21; col++) {
+                    if (row < 3 && col < 3) continue; // Skip the shared area
+                    TextField cell = new TextField();
+                    cell.setPrefHeight(cellSize);
+                    cell.setPrefWidth(cellSize);
+                    cell.setMaxHeight(cellSize);
+                    cell.setMaxWidth(cellSize);
+                    cell.setMinHeight(cellSize);
+                    cell.setMinWidth(cellSize);
 
-                int value = sharedSudoku3.get(row, col - 12);
-                if (value != 0) {
-                    cell.setText(String.valueOf(value));
-                    cell.setEditable(false);
+                    int value = sharedSudoku3.get(row, col - 12);
+                    if (value != 0) {
+                        cell.setText(String.valueOf(value));
+                        cell.setEditable(false);
+                    }
+                    cell.setStyle("-fx-background-radius: 0; -fx-border-radius: 0;");
+                    mergedSudokuGrid.add(cell, col, row + 12);
                 }
-                cell.setStyle("-fx-background-radius: 0; -fx-border-radius: 0;");
-                mergedSudokuGrid.add(cell, col, row + 12);
             }
         }
 
