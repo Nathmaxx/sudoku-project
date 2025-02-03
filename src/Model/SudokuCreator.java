@@ -96,7 +96,7 @@ public class SudokuCreator {
         }
     }
 
-    public Sudoku generateSudokuWithPreFilled(int size, int removalPercentage, int[][] preFilled) {
+    public Sudoku generateSudokuWithPreFilled(int size, int removalPercentage, int[][] preFilled, int untouchedStartRow, int untouchedStartCol, int untouchedEndRow, int untouchedEndCol) {
         this.sudoku = new Sudoku(size);
 
         for (int i = 0; i < size; i++) {
@@ -108,6 +108,13 @@ public class SudokuCreator {
         fillRemainingCells();
 
         removeNumbers(removalPercentage);
+
+        // Set the untouched area back to the original values
+        for (int i = untouchedStartRow; i <= untouchedEndRow; i++) {
+            for (int j = untouchedStartCol; j <= untouchedEndCol; j++) {
+                this.sudoku.set(i, j, preFilled[i][j]);
+            }
+        }
 
         return this.sudoku;
     }

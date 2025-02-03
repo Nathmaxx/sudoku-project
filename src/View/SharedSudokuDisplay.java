@@ -117,7 +117,7 @@ public class SharedSudokuDisplay extends Application {
         }
 
         SudokuCreator sudokuCreator2 = new SudokuCreator(9);
-        board2 = sudokuCreator2.generateSudokuWithPreFilled(9, 60, board2).getBoard();
+        board2 = sudokuCreator2.generateSudokuWithPreFilled(9, 60, board2, 0, 0, 2, 2).getBoard();
 
         //sysout board2
         System.out.println("Board 2 AFTERGEN: ");
