@@ -122,4 +122,8 @@ public class SharedSudoku extends Sudoku implements SharedAreaListener {
             }
         }
     }
+
+    public SharedArea[] getSharedAreas() {
+        return sharedAreas;
+    }
 }
