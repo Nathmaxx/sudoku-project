@@ -39,4 +39,13 @@ public class SharedArea extends Sudoku {
     public void addSharedSudoku(SharedSudoku sharedSudoku) {
         sharedSudokus.add(sharedSudoku);
     }
+
+    public void print() {
+        for (int i = 0; i < this.getSize(); i++) {
+            for (int j = 0; j < this.getSize(); j++) {
+                System.out.print(this.get(i, j) + " ");
+            }
+            System.out.println();
+        }
+    }
 }

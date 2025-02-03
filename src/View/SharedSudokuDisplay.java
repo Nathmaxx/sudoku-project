@@ -79,6 +79,10 @@ public class SharedSudokuDisplay extends Application {
         // Create the shared area
         SharedArea sharedArea = new SharedArea(sharedSquare);
 
+        //sysout sharedArea
+        System.out.println("Shared Area: ");
+        sharedArea.print();
+
         // Generate the second Sudoku with the shared area filled
         int[][] board2 = new int[9][9];
         for (int i = 0; i < 3; i++) {
@@ -86,6 +90,15 @@ public class SharedSudokuDisplay extends Application {
                 board2[i][j] = sharedSquare[i][j];
             }
         }
+        //sysout board2
+        System.out.println("Board 2: ");
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                System.out.print(board2[i][j] + " ");
+            }
+            System.out.println();
+        }
+
         SudokuCreator sudokuCreator2 = new SudokuCreator(9);
         board2 = sudokuCreator2.generateSudokuWithPreFilled(9, 60, board2).getBoard();
 
