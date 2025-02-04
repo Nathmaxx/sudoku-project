@@ -23,7 +23,6 @@ public class SharedSudokuSelection extends Application {
         difficultyComboBox.getItems().addAll("Easy", "Medium", "Hard");
         difficultyComboBox.setValue("Medium");
 
-
         Button selectButton = new Button("Select Sudoku");
         selectButton.setOnAction(event -> {
             String selectedPattern = patternComboBox.getValue();
