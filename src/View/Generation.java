@@ -3,9 +3,11 @@ package View;
 import java.util.List;
 import java.util.Map;
 
+import Controller.NavigationController;
 import Model.Solver;
 import Model.Sudoku;
 import Model.SudokuCreator;
+import View.Components.HomeButton;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -13,8 +15,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import utils.ViewManager;
 
 public class Generation extends BaseView {
+
+    private NavigationController navigationController;
 
     private int gridSize = 9;
     private ProgressBar progressBar;
@@ -23,13 +28,16 @@ public class Generation extends BaseView {
     private List<Map.Entry<Integer, Integer>> steps;
     private GridPane sudokuGrid;
 
-    public Generation() {
-
+    public Generation(ViewManager viewManager) {
+        this.navigationController = new NavigationController(viewManager);
         initializeUI();
     }
 
     @Override
     protected void initializeUI() {
+
+        HomeButton homeButton = new HomeButton(navigationController);
+
         ComboBox<Integer> sizeComboBox = new ComboBox<>();
         sizeComboBox.getItems().addAll(4, 9, 16, 25, 36, 49);
         sizeComboBox.setValue(gridSize);
@@ -114,7 +122,9 @@ public class Generation extends BaseView {
         sudokuGrid = new GridPane();
         sudokuGrid.setPadding(new Insets(30));
 
-        mainView.getChildren().addAll(sizeComboBox, difficultyComboBox, createSudokuButton, solveSudokuButton,
+        mainView.getChildren().addAll(homeButton,
+                sizeComboBox, difficultyComboBox,
+                createSudokuButton, solveSudokuButton,
                 solveSudokuWithStepButton, progressBar,
                 sudokuGrid);
     }

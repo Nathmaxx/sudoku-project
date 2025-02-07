@@ -1,15 +1,14 @@
 package utils;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class ViewManager {
+import java.util.HashMap;
+import java.util.Map;
 
-    private Map<String, Pane> views = new HashMap<>();
+public class ViewManager {
+    private Map<String, Scene> scenes = new HashMap<>();
     private Stage primaryStage;
 
     public ViewManager(Stage primaryStage) {
@@ -17,13 +16,14 @@ public class ViewManager {
     }
 
     public void addView(String name, Pane view) {
-        views.put(name, view);
+        Scene scene = new Scene(view, 800, 800);
+        scenes.put(name, scene);
     }
 
     public void showView(String name) {
-        Pane view = views.get(name);
-        if (view != null) {
-            primaryStage.setScene(new Scene(view, 800, 800));
+        Scene scene = scenes.get(name);
+        if (scene != null) {
+            primaryStage.setScene(scene);
             primaryStage.show();
         }
     }

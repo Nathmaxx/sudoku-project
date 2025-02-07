@@ -13,9 +13,9 @@ public class Main extends Application {
         ViewManager vm = new ViewManager(primaryStage);
 
         Accueil accueil = new Accueil(vm);
-        Generation generation = new Generation();
-        Solve solve = new Solve();
-        SharedSudokuSelection sharedSudokuSelection = new SharedSudokuSelection();
+        Generation generation = new Generation(vm);
+        Solve solve = new Solve(vm);
+        SharedSudokuSelection sharedSudokuSelection = new SharedSudokuSelection(vm);
 
         vm.addView("generation", generation.getView());
         vm.addView("accueil", accueil.getView());
