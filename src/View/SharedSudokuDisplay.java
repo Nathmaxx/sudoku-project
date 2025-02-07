@@ -4,17 +4,13 @@ import Model.SharedSudoku;
 import Model.SharedArea;
 import Model.Solver;
 import Model.SudokuCreator;
-import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
-public class SharedSudokuDisplay extends Application {
+public class SharedSudokuDisplay extends BaseView {
 
     private SharedSudoku sharedSudoku1;
     private SharedSudoku sharedSudoku2;
@@ -24,14 +20,15 @@ public class SharedSudokuDisplay extends Application {
     private GridPane mergedSudokuGrid;
 
     public SharedSudokuDisplay(String pattern, String difficulty) {
-        this.pattern = pattern;
+        super();
         this.difficulty = difficulty;
+        this.pattern = pattern;
+        initializeUI();
+
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Shared Sudoku");
-
+    protected void initializeUI() {
         System.out.println("Selected pattern: " + pattern);
         System.out.println("Selected difficulty: " + difficulty);
 
@@ -48,13 +45,9 @@ public class SharedSudokuDisplay extends Application {
         Button solveButton = new Button("Solve Sudoku");
         solveButton.setOnAction(event -> solveBothSudokus());
 
-        VBox vbox = new VBox(10, mergedSudokuGrid, solveButton);
-        vbox.setAlignment(Pos.CENTER);
-        vbox.setPadding(new Insets(20));
-
-        Scene scene = new Scene(vbox, 600, 800);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        mainView.getChildren().addAll(mergedSudokuGrid, solveButton);
+        mainView.setAlignment(Pos.CENTER);
+        mainView.setPadding(new Insets(20));
     }
 
     private void createPattern1Sudokus() {
@@ -139,7 +132,7 @@ public class SharedSudokuDisplay extends Application {
         board3 = sudokuCreator3.generateSudokuWithPreFilled(9, 60, board3, 0, 0, 2, 2).getBoard();
 
         // Create the shared Sudokus
-        sharedSudoku1 = new SharedSudoku(board1, new SharedArea[]{sharedArea1, sharedArea2});
+        sharedSudoku1 = new SharedSudoku(board1, new SharedArea[] { sharedArea1, sharedArea2 });
         sharedSudoku2 = new SharedSudoku(board2, sharedArea1);
         sharedSudoku3 = new SharedSudoku(board3, sharedArea2);
     }
@@ -151,7 +144,8 @@ public class SharedSudokuDisplay extends Application {
         // Create the first Sudoku grid
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
-                if (row >= 6 && col >= 6) continue; // Skip the shared area
+                if (row >= 6 && col >= 6)
+                    continue; // Skip the shared area
                 TextField cell = new TextField();
                 cell.setPrefHeight(cellSize);
                 cell.setPrefWidth(cellSize);
@@ -173,7 +167,8 @@ public class SharedSudokuDisplay extends Application {
         // Create the second Sudoku grid
         for (int row = 0; row < 9; row++) {
             for (int col = 6; col < 15; col++) {
-                if (row < 3 && col < 3) continue; // Skip the shared area
+                if (row < 3 && col < 3)
+                    continue; // Skip the shared area
                 TextField cell = new TextField();
                 cell.setPrefHeight(cellSize);
                 cell.setPrefWidth(cellSize);
@@ -196,7 +191,8 @@ public class SharedSudokuDisplay extends Application {
         if (sharedSudoku3 != null) {
             for (int row = 0; row < 9; row++) {
                 for (int col = 12; col < 21; col++) {
-                    if (row < 3 && col < 3) continue; // Skip the shared area
+                    if (row < 3 && col < 3)
+                        continue; // Skip the shared area
                     TextField cell = new TextField();
                     cell.setPrefHeight(cellSize);
                     cell.setPrefWidth(cellSize);
@@ -251,7 +247,4 @@ public class SharedSudokuDisplay extends Application {
         }
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
 }
