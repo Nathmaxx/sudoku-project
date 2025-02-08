@@ -53,11 +53,14 @@ public class Solve extends BaseView {
         Button solveButton = new Button("Résoudre");
         solveButton.setOnAction(event -> solveController.backTrackSolve());
 
+        HBox backTrackHBox = new HBox(20);
+        backTrackHBox.getChildren().addAll(solveButton);
+
         // Ajout des éléments dans la vue principale
         mainView.getChildren().addAll(homeButton,
                 sizeGenerationHBox,
                 sudokuGrid,
-                solveButton);
+                backTrackHBox);
         mainView.setAlignment(Pos.CENTER);
 
     }
