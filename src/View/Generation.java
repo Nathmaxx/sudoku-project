@@ -15,6 +15,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import utils.ViewManager;
 
@@ -31,6 +32,9 @@ public class Generation extends BaseView {
     private ComboBox<String> difficultyComboBox;
 
     private GridPane sudokuGrid;
+
+    private Button solveSudokuButton;
+    private Button solveSudokuWithStepButton;
 
     private List<Map.Entry<Integer, Integer>> steps;
     private ProgressBar progressBar;
@@ -64,11 +68,6 @@ public class Generation extends BaseView {
         difficultyComboBox.getItems().addAll("Facile", "Moyen", "Difficile");
         difficultyComboBox.setValue("Moyen");
 
-        // Création de la barre de chargement
-        progressBar = new ProgressBar(0);
-        progressBar.setPrefWidth(300);
-        progressBar.setVisible(false);
-
         // Bouton permettant de créeer un sodoku et l'afficher
         Button createSudokuButton = new Button("Créer un Sudoku");
         createSudokuButton.setOnAction(event -> {
@@ -76,12 +75,27 @@ public class Generation extends BaseView {
             sudokuController.generateSudoku(gridSize, difficulty, progressBar);
         });
 
+        // Création de la barre de chargement
+        progressBar = new ProgressBar(0);
+        progressBar.setPrefWidth(300);
+        progressBar.setVisible(false);
+
+        HBox sudokuGenerationOptionsHBox = new HBox(20);
+        sudokuGenerationOptionsHBox.setAlignment(Pos.CENTER);
+        sudokuGenerationOptionsHBox.getChildren().addAll(sizeComboBox, difficultyComboBox, createSudokuButton);
+
+        // Création de la grille du sudoku
+        sudokuGrid = new GridPane();
+        sudokuGrid.setAlignment(Pos.CENTER);
+
         // Bouton permettant de résoudre le sudoku
-        Button solveSudokuButton = new Button("Résoudre");
+        this.solveSudokuButton = new Button("Résoudre");
+        solveSudokuButton.setVisible(false);
         solveSudokuButton.setOnAction(event -> sudokuController.solveSudoku(currentSudoku));
 
         // Bouton permettanst de résoudre l'étape suivante
-        Button solveSudokuWithStepButton = new Button("Résoudre l'étape suivante");
+        this.solveSudokuWithStepButton = new Button("Résoudre l'étape suivante");
+        solveSudokuWithStepButton.setVisible(false);
         solveSudokuWithStepButton.setOnAction(event -> {
             if (currentSudoku != null) {
                 System.out.println("Solving step " + currentStepIndex);
@@ -109,16 +123,17 @@ public class Generation extends BaseView {
             }
         });
 
-        // Création de la grille du sudoku
-        sudokuGrid = new GridPane();
-        sudokuGrid.setPadding(new Insets(30));
+        // HBox contenant les boutons de résolution
+        HBox solveButtonsHBox = new HBox(20);
+        solveButtonsHBox.setAlignment(Pos.CENTER);
+        solveButtonsHBox.getChildren().addAll(solveSudokuButton, solveSudokuWithStepButton);
 
         // Ajout de tous les éléments dans la vue principale
         mainView.getChildren().addAll(homeVBox,
-                sizeComboBox, difficultyComboBox,
-                createSudokuButton, solveSudokuButton,
-                solveSudokuWithStepButton, progressBar,
-                sudokuGrid);
+                sudokuGenerationOptionsHBox,
+                sudokuGrid,
+                solveButtonsHBox,
+                progressBar);
     }
 
     public void createSudokuGrid(Sudoku sudoku) {
@@ -161,6 +176,12 @@ public class Generation extends BaseView {
                 subGrids[subGridRow][subGridCol].add(cell, col % sqrtSize, row % sqrtSize);
             }
         }
+        showSolveButtons();
+    }
+
+    public void showSolveButtons() {
+        solveSudokuButton.setVisible(true);
+        solveSudokuWithStepButton.setVisible(true);
     }
 
     public String getDifficulty() {
