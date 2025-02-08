@@ -7,9 +7,7 @@ import Controller.NavigationController;
 import Controller.SudokuController;
 import Model.Solver;
 import Model.Sudoku;
-import Model.SudokuCreator;
 import View.Components.HomeButton;
-import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -29,6 +27,8 @@ public class Generation extends BaseView {
     private int currentStepIndex = 0;
 
     private Sudoku currentSudoku;
+
+    private ComboBox<String> difficultyComboBox;
 
     private GridPane sudokuGrid;
 
@@ -69,32 +69,11 @@ public class Generation extends BaseView {
         progressBar.setPrefWidth(300);
         progressBar.setVisible(false);
 
+        // Bouton permettant de créeer un sodoku et l'afficher
         Button createSudokuButton = new Button("Créer un Sudoku");
         createSudokuButton.setOnAction(event -> {
-            int percentage = getRemovalPercentage(difficultyComboBox.getValue());
-            Task<Void> task = new Task<Void>() {
-                @Override
-                protected Void call() throws Exception {
-                    SudokuCreator sudokuCreator = new SudokuCreator(gridSize);
-                    sudokuCreator.setProgressListener(progress -> updateProgress(progress, 1.0));
-                    currentSudoku = sudokuCreator.generateSudoku(gridSize, percentage);
-                    return null;
-                }
-
-                @Override
-                protected void succeeded() {
-                    createSudokuGrid(currentSudoku);
-                    progressBar.setVisible(false);
-                }
-
-                @Override
-                protected void running() {
-                    progressBar.setVisible(true);
-                }
-            };
-
-            progressBar.progressProperty().bind(task.progressProperty());
-            new Thread(task).start();
+            String difficulty = difficultyComboBox.getValue();
+            sudokuController.generateSudoku(gridSize, difficulty, progressBar);
         });
 
         // Bouton permettant de résoudre le sudoku
@@ -142,19 +121,6 @@ public class Generation extends BaseView {
                 sudokuGrid);
     }
 
-    private int getRemovalPercentage(String difficulty) {
-        switch (difficulty) {
-            case "Facile":
-                return 40;
-            case "Moyen":
-                return 60;
-            case "Difficile":
-                return 80;
-            default:
-                return 60;
-        }
-    }
-
     public void createSudokuGrid(Sudoku sudoku) {
         sudokuGrid.getChildren().clear();
         int size = sudoku.getSize();
@@ -195,6 +161,26 @@ public class Generation extends BaseView {
                 subGrids[subGridRow][subGridCol].add(cell, col % sqrtSize, row % sqrtSize);
             }
         }
+    }
+
+    public String getDifficulty() {
+        return difficultyComboBox.getValue();
+    }
+
+    public int getGridSize() {
+        return this.gridSize;
+    }
+
+    public Sudoku getCurrentSudoku() {
+        return this.currentSudoku;
+    }
+
+    public void setCurrentSudoku(Sudoku newSudoku) {
+        this.currentSudoku = newSudoku;
+    }
+
+    public ProgressBar getProgressBar() {
+        return this.progressBar;
     }
 
 }
