@@ -9,6 +9,7 @@ import View.Components.SudokuGrid;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import utils.ViewManager;
 
 public class Solve extends BaseView {
@@ -21,6 +22,8 @@ public class Solve extends BaseView {
     private Sudoku currentSudoku;
 
     private int gridSize = 9;
+
+    private Text message;
 
     public Solve(ViewManager vm) {
         super();
@@ -45,20 +48,11 @@ public class Solve extends BaseView {
         sizeGenerationHBox.getChildren().addAll(sizeComboBox, generateButton);
         sizeGenerationHBox.setAlignment(Pos.CENTER);
 
+        this.message = new Text("");
+        message.setVisible(false);
+
         // SudokuGrid affichant la grille du sudoku
-        // this.currentSudoku = new Sudoku(gridSize);
-        int[][] initialBoard = {
-                { 5, 3, 0, 0, 7, 0, 0, 0, 0 },
-                { 6, 0, 0, 1, 9, 5, 0, 0, 0 },
-                { 0, 9, 8, 0, 0, 0, 0, 6, 0 },
-                { 8, 0, 0, 0, 6, 0, 0, 0, 3 },
-                { 4, 0, 0, 8, 0, 3, 0, 0, 1 },
-                { 7, 0, 0, 0, 2, 0, 0, 0, 6 },
-                { 0, 6, 0, 0, 0, 0, 2, 8, 0 },
-                { 0, 0, 0, 4, 1, 9, 0, 0, 5 },
-                { 0, 0, 0, 0, 8, 0, 0, 7, 9 }
-        };
-        this.currentSudoku = new Sudoku(initialBoard);
+        this.currentSudoku = new Sudoku(gridSize);
         this.sudokuGrid = new SudokuGrid(currentSudoku);
         sudokuGrid.setAlignment(Pos.CENTER);
 
@@ -78,6 +72,7 @@ public class Solve extends BaseView {
         // Ajout des éléments dans la vue principale
         mainView.getChildren().addAll(homeButton,
                 sizeGenerationHBox,
+                message,
                 sudokuGrid,
                 backTrackHBox);
         mainView.setAlignment(Pos.CENTER);
@@ -102,6 +97,22 @@ public class Solve extends BaseView {
 
     public int getGridSize() {
         return this.gridSize;
+    }
+
+    public String getMessage() {
+        return message.getText();
+    }
+
+    public void setMessage(String newMessage) {
+        this.message.setText(newMessage);
+    }
+
+    public void displayMessage() {
+        message.setVisible(true);
+    }
+
+    public void hideMessage() {
+        message.setVisible(false);
     }
 
 }
