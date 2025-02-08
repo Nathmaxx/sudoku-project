@@ -6,7 +6,7 @@ import javafx.scene.control.Button;
 public class HomeButton extends Button {
 
     public HomeButton(NavigationController navigationController) {
-        super("Accueil");
+        super("Retour à l'accueil");
         this.setOnAction(event -> navigationController.navigation("accueil"));
     }
 }

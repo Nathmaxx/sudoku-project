@@ -1,8 +1,10 @@
 package View;
 
 import Controller.NavigationController;
+import Model.Sudoku;
 import View.Components.HomeButton;
-import javafx.scene.text.Text;
+import View.Components.SudokuGrid;
+import javafx.geometry.Pos;
 import utils.ViewManager;
 
 public class Solve extends BaseView {
@@ -17,9 +19,11 @@ public class Solve extends BaseView {
 
     @Override
     protected void initializeUI() {
-        Text mainText = new Text("Page de résolution");
         HomeButton homeButton = new HomeButton(navigationController);
-        mainView.getChildren().addAll(mainText, homeButton);
+        SudokuGrid sudokuGrid = new SudokuGrid(new Sudoku(9));
+        sudokuGrid.setAlignment(Pos.CENTER);
+        mainView.getChildren().addAll(homeButton, sudokuGrid);
+        mainView.setAlignment(Pos.CENTER);
     }
 
 }
