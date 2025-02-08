@@ -25,11 +25,8 @@ public class SudokuGrid extends GridPane {
         this.getChildren().clear();
         int size = sudoku.getSize();
         int sqrtSize = (int) Math.sqrt(size);
-        int cellSize = 28;
+        int cellSize = 30;
 
-        if (size > 9) {
-            cellSize = 34;
-        }
         GridPane[][] subGrids = new GridPane[sqrtSize][sqrtSize];
 
         for (int subRow = 0; subRow < sqrtSize; subRow++) {

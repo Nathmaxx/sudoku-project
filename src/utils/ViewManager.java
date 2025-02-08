@@ -16,7 +16,7 @@ public class ViewManager {
     }
 
     public void addView(String name, Pane view) {
-        Scene scene = new Scene(view, 600, 600);
+        Scene scene = new Scene(view, 700, 700);
         scenes.put(name, scene);
     }
 

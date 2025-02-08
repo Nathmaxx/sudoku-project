@@ -18,6 +18,8 @@ public class Solve extends BaseView {
 
     private SudokuGrid sudokuGrid;
 
+    private Sudoku currentSudoku;
+
     private int gridSize = 9;
 
     public Solve(ViewManager vm) {
@@ -41,19 +43,27 @@ public class Solve extends BaseView {
 
         HBox sizeGenerationHBox = new HBox(20);
         sizeGenerationHBox.getChildren().addAll(sizeComboBox, generateButton);
+        sizeGenerationHBox.setAlignment(Pos.CENTER);
 
         // SudokuGrid affichant la grille du sudoku
-        this.sudokuGrid = new SudokuGrid(new Sudoku(gridSize));
+        this.currentSudoku = new Sudoku(gridSize);
+        this.sudokuGrid = new SudokuGrid(currentSudoku);
         sudokuGrid.setAlignment(Pos.CENTER);
 
+        Button solveButton = new Button("Résoudre");
+
         // Ajout des éléments dans la vue principale
-        mainView.getChildren().addAll(homeButton, sizeGenerationHBox, sudokuGrid);
+        mainView.getChildren().addAll(homeButton,
+                sizeGenerationHBox,
+                sudokuGrid,
+                solveButton);
         mainView.setAlignment(Pos.CENTER);
+
     }
 
     public void displayEmptySudoku() {
-        System.out.println("ok");
-        sudokuGrid.setSudoku(new Sudoku(gridSize));
+        currentSudoku = new Sudoku(gridSize);
+        sudokuGrid.setSudoku(currentSudoku);
         sudokuGrid.displaySudoku();
     }
 
