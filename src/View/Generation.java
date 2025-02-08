@@ -4,49 +4,67 @@ import java.util.List;
 import java.util.Map;
 
 import Controller.NavigationController;
+import Controller.SudokuController;
 import Model.Solver;
 import Model.Sudoku;
 import Model.SudokuCreator;
 import View.Components.HomeButton;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import utils.ViewManager;
 
 public class Generation extends BaseView {
 
     private NavigationController navigationController;
+    private SudokuController sudokuController;
 
     private int gridSize = 9;
-    private ProgressBar progressBar;
-    private Sudoku currentSudoku;
     private int currentStepIndex = 0;
-    private List<Map.Entry<Integer, Integer>> steps;
+
+    private Sudoku currentSudoku;
+
     private GridPane sudokuGrid;
+
+    private List<Map.Entry<Integer, Integer>> steps;
+    private ProgressBar progressBar;
 
     public Generation(ViewManager viewManager) {
         this.navigationController = new NavigationController(viewManager);
+        this.sudokuController = new SudokuController(this);
         initializeUI();
     }
 
     @Override
     protected void initializeUI() {
 
+        // Bouton permettant de retourner à l'accueil
         HomeButton homeButton = new HomeButton(navigationController);
 
+        // VBox contenant le homeButton
+        VBox homeVBox = new VBox();
+        homeVBox.getChildren().addAll(homeButton);
+        homeVBox.setAlignment(Pos.CENTER);
+        homeVBox.setPadding(new Insets(20, 0, 20, 0));
+
+        // Combobox contenant les différentes tailles de Sudoku à générer
         ComboBox<Integer> sizeComboBox = new ComboBox<>();
         sizeComboBox.getItems().addAll(4, 9, 16, 25, 36, 49);
         sizeComboBox.setValue(gridSize);
         sizeComboBox.setOnAction(event -> gridSize = sizeComboBox.getValue());
 
+        // Combobox contenant le sniveaux de difficulté pour les sudokus
         ComboBox<String> difficultyComboBox = new ComboBox<>();
         difficultyComboBox.getItems().addAll("Facile", "Moyen", "Difficile");
         difficultyComboBox.setValue("Moyen");
 
+        // Création de la barre de chargement
         progressBar = new ProgressBar(0);
         progressBar.setPrefWidth(300);
         progressBar.setVisible(false);
@@ -79,18 +97,11 @@ public class Generation extends BaseView {
             new Thread(task).start();
         });
 
+        // Bouton permettant de résoudre le sudoku
         Button solveSudokuButton = new Button("Résoudre");
-        solveSudokuButton.setOnAction(event -> {
-            if (currentSudoku != null) {
-                Solver solver = new Solver(currentSudoku);
-                if (solver.solveSudoku(0, 0)) {
-                    createSudokuGrid(currentSudoku);
-                } else {
-                    System.out.println("Impossible de résoudre le Sudoku.");
-                }
-            }
-        });
+        solveSudokuButton.setOnAction(event -> sudokuController.solveSudoku(currentSudoku));
 
+        // Bouton permettanst de résoudre l'étape suivante
         Button solveSudokuWithStepButton = new Button("Résoudre l'étape suivante");
         solveSudokuWithStepButton.setOnAction(event -> {
             if (currentSudoku != null) {
@@ -119,10 +130,12 @@ public class Generation extends BaseView {
             }
         });
 
+        // Création de la grille du sudoku
         sudokuGrid = new GridPane();
         sudokuGrid.setPadding(new Insets(30));
 
-        mainView.getChildren().addAll(homeButton,
+        // Ajout de tous les éléments dans la vue principale
+        mainView.getChildren().addAll(homeVBox,
                 sizeComboBox, difficultyComboBox,
                 createSudokuButton, solveSudokuButton,
                 solveSudokuWithStepButton, progressBar,
@@ -142,7 +155,7 @@ public class Generation extends BaseView {
         }
     }
 
-    private void createSudokuGrid(Sudoku sudoku) {
+    public void createSudokuGrid(Sudoku sudoku) {
         sudokuGrid.getChildren().clear();
         int size = sudoku.getSize();
         int sqrtSize = (int) Math.sqrt(size);
