@@ -38,7 +38,7 @@ public class Solve extends BaseView {
         SizeComboBox sizeComboBox = new SizeComboBox(gridSize);
         sizeComboBox.setOnAction(event -> gridSize = sizeComboBox.getValue());
 
-        Button generateButton = new Button("Générer");
+        Button generateButton = new Button("Changer de taille/Réinitialiser");
         generateButton.setOnAction(event -> solveController.generateEmptySudoku());
 
         HBox sizeGenerationHBox = new HBox(20);
@@ -51,6 +51,7 @@ public class Solve extends BaseView {
         sudokuGrid.setAlignment(Pos.CENTER);
 
         Button solveButton = new Button("Résoudre");
+        solveButton.setOnAction(event -> solveController.backTrackSolve());
 
         // Ajout des éléments dans la vue principale
         mainView.getChildren().addAll(homeButton,
@@ -65,6 +66,20 @@ public class Solve extends BaseView {
         currentSudoku = new Sudoku(gridSize);
         sudokuGrid.setSudoku(currentSudoku);
         sudokuGrid.displaySudoku();
+    }
+
+    public Sudoku getCurrentSudoku() {
+        return this.currentSudoku;
+    }
+
+    public void setCurrentSudoku(Sudoku newSudoku) {
+        this.currentSudoku = newSudoku;
+        sudokuGrid.setSudoku(newSudoku);
+        sudokuGrid.displaySudoku();
+    }
+
+    public int getGridSize() {
+        return this.gridSize;
     }
 
 }

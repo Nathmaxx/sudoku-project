@@ -5,7 +5,11 @@ public class BackTrackingSolver {
     private int[][] board;
     private int size;
 
-    public BackTrackingSolver(Sudoku sudoku) {
+    public BackTrackingSolver() {
+
+    }
+
+    public void setSudoku(Sudoku sudoku) {
         this.board = sudoku.getBoard();
         this.size = sudoku.getSize();
     }
@@ -35,9 +39,61 @@ public class BackTrackingSolver {
 
         for (int i = boxRow; i < boxRow + boxSize; i++) {
             for (int j = boxColumn; j < boxColumn + boxSize; j++) {
-                if (board[i][j] == number)
+                if (board[i][j] == number) {
+                    return true;
+                }
             }
         }
+        return false;
+    }
+
+    private boolean isValidPlacement(int number, int column, int row) {
+        return !isNumberInRow(number, row) &&
+                !isNumberInColumn(number, column) &&
+                !isNumberInBox(number, row, column);
+    }
+
+    public boolean backTrackingSolve() {
+        for (int row = 0; row < size; row++) {
+            for (int column = 0; column < size; column++) {
+                if (board[row][column] == 0) {
+                    for (int numberToTry = 1; numberToTry <= size; numberToTry++) {
+                        if (isValidPlacement(numberToTry, column, row)) {
+                            board[row][column] = numberToTry;
+
+                            if (backTrackingSolve()) {
+                                return true;
+                            } else {
+                                board[row][column] = 0;
+                            }
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean backTrackingStep() {
+        for (int row = 0; row < size; row++) {
+            for (int column = 0; column < size; column++) {
+                if (board[row][column] == 0) {
+                    for (int numberToTry = 1; numberToTry <= size; numberToTry++) {
+                        if (isValidPlacement(numberToTry, column, row)) {
+                            board[row][column] = numberToTry;
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public int[][] getBoard() {
+        return this.board;
     }
 
 }
