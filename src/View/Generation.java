@@ -8,6 +8,7 @@ import Controller.SudokuController;
 import Model.Solver;
 import Model.Sudoku;
 import View.Components.HomeButton;
+import View.Components.SizeComboBox;
 import View.Components.SudokuGrid;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -57,9 +58,7 @@ public class Generation extends BaseView {
         homeVBox.setPadding(new Insets(20, 0, 20, 0));
 
         // Combobox contenant les différentes tailles de Sudoku à générer
-        ComboBox<Integer> sizeComboBox = new ComboBox<>();
-        sizeComboBox.getItems().addAll(4, 9, 16, 25, 36, 49);
-        sizeComboBox.setValue(gridSize);
+        SizeComboBox sizeComboBox = new SizeComboBox(gridSize);
         sizeComboBox.setOnAction(event -> gridSize = sizeComboBox.getValue());
 
         // Combobox contenant le sniveaux de difficulté pour les sudokus
