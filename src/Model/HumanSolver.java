@@ -2,8 +2,19 @@ package Model;
 
 import java.util.ArrayList;
 
+/**
+ * Classe qui implémente une résolution de Sudoku similaire à celle d'un humain.
+ * Cette classe étend SudokuSolver et utilise des techniques de résolution
+ * logiques.
+ */
 public class HumanSolver extends SudokuSolver {
 
+    /**
+     * Résout le Sudoku en utilisant des techniques humaines.
+     * Continue à résoudre tant que des progrès sont possibles.
+     *
+     * @return true si le Sudoku est complètement résolu, false sinon
+     */
     public boolean solveLikeHuman() {
         boolean progress;
         do {
@@ -13,6 +24,12 @@ public class HumanSolver extends SudokuSolver {
         return isSudokuComplete();
     }
 
+    /**
+     * Effectue une seule étape de résolution.
+     * Recherche d'abord les "naked singles" puis les "hidden singles".
+     *
+     * @return true si un nombre a été placé avec succès, false sinon
+     */
     public boolean solveOneStep() {
         // Chercher les naked singles
         for (int row = 0; row < size; row++) {
@@ -46,6 +63,13 @@ public class HumanSolver extends SudokuSolver {
         return false;
     }
 
+    /**
+     * Trouve tous les nombres possibles pour une case donnée.
+     *
+     * @param row l'index de la ligne
+     * @param col l'index de la colonne
+     * @return une liste des nombres possibles pour cette case
+     */
     private ArrayList<Integer> findPossibleNumbers(int row, int col) {
         ArrayList<Integer> possibles = new ArrayList<>();
         for (int num = 1; num <= size; num++) {
@@ -56,12 +80,25 @@ public class HumanSolver extends SudokuSolver {
         return possibles;
     }
 
+    /**
+     * Vérifie si un nombre peut être placé dans une case donnée.
+     *
+     * @param row l'index de la ligne
+     * @param col l'index de la colonne
+     * @param num le nombre à vérifier
+     * @return true si le nombre peut être placé, false sinon
+     */
     private boolean isPossible(int row, int col, int num) {
         return !isNumberInRow(num, row) &&
                 !isNumberInColumn(num, col) &&
                 !isNumberInBox(num, row, col);
     }
 
+    /**
+     * Vérifie si le Sudoku est complètement rempli.
+     *
+     * @return true si toutes les cases sont remplies, false sinon
+     */
     private boolean isSudokuComplete() {
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
