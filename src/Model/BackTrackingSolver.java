@@ -2,14 +2,28 @@ package Model;
 
 import java.util.logging.Logger;
 
+/**
+ * Classe qui implémente l'algorithme de backtracking pour résoudre un Sudoku.
+ * Cette classe étend SudokuSolver et utilise une approche récursive.
+ */
 public class BackTrackingSolver extends SudokuSolver {
 
     private static final Logger logger = Logger.getLogger(BackTrackingSolver.class.getName());
 
+    /**
+     * Constructeur par défaut.
+     */
     public BackTrackingSolver() {
         super();
     }
 
+    /**
+     * Résout le Sudoku en utilisant l'algorithme de backtracking.
+     * Parcourt la grille et essaie de placer des nombres jusqu'à trouver une
+     * solution.
+     *
+     * @return true si une solution est trouvée, false sinon
+     */
     public boolean backTrackingSolve() {
         for (int row = 0; row < size; row++) {
             for (int column = 0; column < size; column++) {
