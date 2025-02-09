@@ -50,6 +50,7 @@ public class SharedSudokuDisplay extends BaseView {
      *
      * @param pattern    le modèle de Sudoku sélectionné
      * @param difficulty la difficulté sélectionnée
+     * @param vm         le gestionnaire de vues
      */
     public SharedSudokuDisplay(String pattern, String difficulty, ViewManager vm) {
         super();

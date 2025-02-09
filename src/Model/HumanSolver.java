@@ -10,6 +10,13 @@ import java.util.ArrayList;
 public class HumanSolver extends SudokuSolver {
 
     /**
+     * Constructeur par défaut
+     */
+    public HumanSolver() {
+
+    }
+
+    /**
      * Résout le Sudoku en utilisant des techniques humaines.
      * Continue à résoudre tant que des progrès sont possibles.
      *

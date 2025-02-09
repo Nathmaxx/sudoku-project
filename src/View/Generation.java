@@ -46,9 +46,9 @@ public class Generation extends BaseView {
     private ProgressBar progressBar;
 
     /**
-     * Constructeur pour initialiser la vue de génération de Sudoku.
-     *
-     * @param vm le gestionnaire de vues
+     * Constructeur pour initialiser la vue de génération de Sudo
+     * 
+     * @param viewManager le gestionnaire de v
      */
     public Generation(ViewManager viewManager) {
         this.navigationController = new NavigationController(viewManager);

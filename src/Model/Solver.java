@@ -182,7 +182,8 @@ public class Solver {
      * Cette méthode gère la résolution coordonnée de plusieurs grilles de Sudoku
      * qui partagent des cases communes.
      * 
-     * @param multidoku le Multidoku à résoudre
+     * @param row la ligne de départ
+     * @param col la colonne de départ
      * @return true si une solution est trouvée pour tous les Sudokus, false sinon
      */
     public boolean solveMultiSudoku(int row, int col) {

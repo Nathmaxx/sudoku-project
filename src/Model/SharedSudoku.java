@@ -127,8 +127,8 @@ public class SharedSudoku extends Sudoku implements SharedAreaListener {
     /**
      * Gère la notification de mise à jour d'une zone partagée.
      *
-     * @param row   la ligne de la case modifiée
-     * @param col   la colonne de la case modifiée
+     * @param i     la ligne de la case modifiée
+     * @param j     la colonne de la case modifiée
      * @param value la nouvelle valeur
      */
     @Override
@@ -178,8 +178,8 @@ public class SharedSudoku extends Sudoku implements SharedAreaListener {
      * Met à jour la valeur d'une case dans la grille.
      * Propage la mise à jour aux zones partagées si nécessaire.
      *
-     * @param row   la ligne de la case
-     * @param col   la colonne de la case
+     * @param i     la ligne de la case
+     * @param j     la colonne de la case
      * @param value la nouvelle valeur
      */
     @Override

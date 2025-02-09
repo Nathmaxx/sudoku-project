@@ -19,10 +19,10 @@ public class MultidokuController {
     private ViewManager vm;
 
     /**
-     * Constructeur pour initialiser le contrôleur avec la sélection de Sudoku
-     * partagé.
+     * Constructeur pour initialiser le contrôleur de Multidoku.
      *
      * @param sharedSudokuSelection la sélection de Sudoku partagé
+     * @param vm                    le gestionnaire de vues
      */
     public MultidokuController(SharedSudokuSelection sharedSudokuSelection, ViewManager vm) {
         this.sharedSudokuSelection = sharedSudokuSelection;

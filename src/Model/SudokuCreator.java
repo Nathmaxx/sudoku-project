@@ -133,9 +133,9 @@ public class SudokuCreator {
     }
 
     /**
-     * Définit l'écouteur de progression.
+     * Définit un écouteur de progression pour la génération du Sudoku.
      *
-     * @param listener le Consumer qui sera notifié de la progression
+     * @param progressListener le Consumer qui sera notifié de la progression
      */
     public void setProgressListener(Consumer<Double> progressListener) {
         this.progressListener = progressListener;
@@ -154,14 +154,15 @@ public class SudokuCreator {
 
     /**
      * Génère un Sudoku avec des cases pré-remplies.
-     * Cette méthode crée un nouveau Sudoku en utilisant une grille existante comme
-     * base,
-     * puis retire un certain pourcentage de nombres pour créer le puzzle.
      *
-     * @param size       la taille de la grille
-     * @param percentage le pourcentage de cases à vider
-     * @param preFilled  la grille pré-remplie à utiliser comme base
-     * @return le Sudoku généré avec les cases pré-remplies
+     * @param size              la taille de la grille
+     * @param removalPercentage le pourcentage de cases à vider
+     * @param preFilled         le tableau 2D des cases pré-remplies
+     * @param untouchedStartRow la ligne de départ des cases non modifiables
+     * @param untouchedStartCol la colonne de départ des cases non modifiables
+     * @param untouchedEndRow   la ligne de fin des cases non modifiables
+     * @param untouchedEndCol   la colonne de fin des cases non modifiables
+     * @return le Sudoku généré
      */
     public Sudoku generateSudokuWithPreFilled(int size, int removalPercentage, int[][] preFilled, int untouchedStartRow,
             int untouchedStartCol, int untouchedEndRow, int untouchedEndCol) {

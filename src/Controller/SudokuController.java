@@ -47,7 +47,10 @@ public class SudokuController {
     /**
      * Génère un nouveau Sudoku de la taille spécifiée.
      *
-     * @param size la taille de la grille de Sudoku à générer
+     * @param gridSize    la taille de la grille de Sudoku à générer
+     * @param difficulty  la difficulté du Sudoku à générer
+     * @param progressBar la barre de progression à mettre à jour pendant la
+     *                    génération
      */
     public void generateSudoku(int gridSize, String difficulty, ProgressBar progressBar) {
         int percentage = getRemovalPercentage(difficulty);

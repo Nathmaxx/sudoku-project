@@ -157,9 +157,7 @@ public class Solve extends BaseView {
     }
 
     /**
-     * Affiche un message dans la vue.
-     *
-     * @param message le message à afficher
+     * Affiche le message
      */
     public void displayMessage() {
         message.setVisible(true);
