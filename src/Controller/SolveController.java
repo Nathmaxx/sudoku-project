@@ -5,22 +5,43 @@ import Model.HumanSolver;
 import Model.Sudoku;
 import View.Solve;
 
+/**
+ * Contrôleur pour gérer les interactions entre la vue et le modèle de
+ * résolution de Sudoku.
+ * Cette classe gère la génération et la résolution des grilles de Sudoku.
+ */
 public class SolveController {
 
+    /** Vue de résolution de Sudoku */
     private Solve solve;
+
+    /** Solveur utilisant l'algorithme de backtracking */
     private BackTrackingSolver bts;
+
+    /** Solveur utilisant des techniques humaines */
     private HumanSolver hs;
 
+    /**
+     * Constructeur pour initialiser le contrôleur avec la vue de résolution.
+     *
+     * @param solve la vue de résolution de Sudoku
+     */
     public SolveController(Solve solve) {
         this.solve = solve;
         this.bts = new BackTrackingSolver();
         this.hs = new HumanSolver();
     }
 
+    /**
+     * Génère un Sudoku vide et l'affiche dans la vue.
+     */
     public void generateEmptySudoku() {
         solve.displayEmptySudoku();
     }
 
+    /**
+     * Résout le Sudoku actuel en utilisant l'algorithme de backtracking.
+     */
     public void backTrackSolve() {
         solve.hideMessage();
         Sudoku currentSudoku = solve.getCurrentSudoku();
@@ -38,6 +59,9 @@ public class SolveController {
 
     }
 
+    /**
+     * Résout le Sudoku actuel en utilisant des techniques humaines.
+     */
     public void humanSolve() {
         solve.hideMessage();
         Sudoku currenSudoku = solve.getCurrentSudoku();
@@ -54,6 +78,9 @@ public class SolveController {
         solve.setCurrentSudoku(currenSudoku);
     }
 
+    /**
+     * Effectue une seule étape de résolution en utilisant des techniques humaines.
+     */
     public void humanSolveStep() {
         solve.hideMessage();
         Sudoku currenSudoku = solve.getCurrentSudoku();
