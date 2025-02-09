@@ -1,6 +1,6 @@
 package Controller;
 
-import Model.Solver;
+import Model.BackTrackingSolver;
 import Model.Sudoku;
 import Model.SudokuCreator;
 import View.Generation;
@@ -17,12 +17,15 @@ public class SudokuController {
 
     public void solveSudoku(Sudoku currentSudoku) {
         if (currentSudoku != null) {
-            Solver solver = new Solver(currentSudoku);
-            if (solver.solveSudoku(0, 0)) {
-                generation.displaySudoku(currentSudoku);
+            BackTrackingSolver bts = new BackTrackingSolver();
+            bts.setSudoku(currentSudoku);
+
+            if (bts.backTrackingSolve()) {
+                generation.displaySudoku(new Sudoku(bts.getBoard()));
             } else {
                 System.out.println("Impossible de résoudre le Sudoku.");
             }
+
         }
     }
 
