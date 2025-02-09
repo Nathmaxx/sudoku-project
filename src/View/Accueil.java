@@ -10,15 +10,30 @@ import Controller.NavigationController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
+/**
+ * Classe représentant la vue d'accueil de l'application.
+ * Gère l'affichage des options de navigation vers les différentes
+ * fonctionnalités.
+ */
 public class Accueil extends BaseView {
 
+    /** Contrôleur de navigation pour gérer les changements de vue */
     private NavigationController navigationController;
 
+    /**
+     * Constructeur pour initialiser la vue d'accueil.
+     *
+     * @param vm le gestionnaire de vues
+     */
     public Accueil(ViewManager vm) {
         this.navigationController = new NavigationController(vm);
         initializeUI();
     }
 
+    /**
+     * Initialise l'interface utilisateur de la vue d'accueil.
+     * Configure les composants et les ajoute à la scène.
+     */
     protected void initializeUI() {
         mainView.setAlignment(Pos.CENTER);
         mainView.setPadding(new Insets(20));
