@@ -30,7 +30,7 @@ public class Accueil extends BaseView {
         Button solveButton = new Button("Résolution");
         solveButton.setOnAction(event -> navigationController.navigation("solve"));
 
-        Button sharedSudokuButton = new Button("Shared Sudoku");
+        Button sharedSudokuButton = new Button("Multidoku");
         sharedSudokuButton.setOnAction(event -> navigationController.navigation("multidoku"));
 
         HBox hbox = new HBox(10);
