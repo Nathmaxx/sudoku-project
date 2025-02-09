@@ -34,6 +34,7 @@ public class Solve extends BaseView {
     /** Taille de la grille de Sudoku */
     private int gridSize = 9;
 
+    /** Message donnant des informations à l'utilisateur */
     private Text message;
 
     /**
