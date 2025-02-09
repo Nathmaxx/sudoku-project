@@ -13,6 +13,33 @@ public class Solver {
         this.sudoku = sudoku;
     }
 
+    private int[][] solution;
+
+    public Solver(SharedSudoku sudoku) {
+        this.sudoku = sudoku;
+        this.solution = new int[9][9];
+    }
+
+    private boolean isSafe(int row, int col, int num) {
+        // Check if it's safe to place the number in the given cell
+        // Ensure that the shared area constraints are checked
+        int subGridSize = (int) Math.sqrt(this.sudoku.getSize());
+        int startRow = row - row % subGridSize;
+        int startCol = col - col % subGridSize;
+        for (int i = 0; i < subGridSize; i++) {
+            for (int j = 0; j < subGridSize; j++) {
+                if (this.sudoku.get(startRow + i, startCol + j) == num) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void reset() {
+        this.solution = new int[9][9];
+    }
+
     public boolean checkRow(int row) {
         int[] values = new int[this.sudoku.getSize()];
         for (int i = 0; i < this.sudoku.getSize(); i++) {
@@ -78,6 +105,34 @@ public class Solver {
             }
         }
         return true;
+    }
+
+    public boolean solveMultiSudoku(int row, int col) {
+        if (row == this.sudoku.getSize()) {
+            row = 0;
+            if (++col == this.sudoku.getSize()) {
+                // Store the current solution in the solution array
+                for (int i = 0; i < this.sudoku.getSize(); i++) {
+                    for (int j = 0; j < this.sudoku.getSize(); j++) {
+                        solution[i][j] = this.sudoku.get(i, j);
+                    }
+                }
+                return true; // Sudoku solved
+            }
+        }
+        if (this.sudoku.get(row, col) != 0) {
+            return solveSudoku(row + 1, col); // Skip filled cells
+        }
+        for (int num = 1; num <= this.sudoku.getSize(); num++) {
+            if (isValid(row, col, num)) {
+                this.sudoku.set(row, col, num); // Try placing the number
+                if (solveSudoku(row + 1, col)) {
+                    return true; // If it leads to a solution, return true
+                }
+                this.sudoku.set(row, col, 0); // Backtrack if it doesn't work
+            }
+        }
+        return false; // No valid number found for this cell
     }
 
     public boolean solveSudoku(int row, int col) {

@@ -237,14 +237,33 @@ public class SharedSudokuDisplay extends BaseView {
     private void solveBothSudokus() {
         Solver solver1 = new Solver(sharedSudoku1);
         Solver solver2 = new Solver(sharedSudoku2);
-        Solver solver3 = new Solver(sharedSudoku3);
 
-        if (solver1.solveSudoku(0, 0) && solver2.solveSudoku(0, 0) && solver3.solveSudoku(0, 0)) {
+        // Solve the first Sudoku
+        if (solveWithBacktracking(solver1, solver2)) {
             createMergedSudokuGrid();
-            System.out.println("All Sudokus solved!");
+            System.out.println("Both Sudokus solved!");
         } else {
-            System.out.println("Unable to solve all Sudokus.");
+            System.out.println("Unable to solve both Sudokus.");
         }
+    }
+
+    private boolean solveWithBacktracking(Solver solver1, Solver solver2) {
+        // Try to solve the first Sudoku
+        if (solver1.solveMultiSudoku(0, 0)) {
+            // Update the shared area in the second Sudoku
+            int[][] sharedSquare = sharedSudoku1.getSharedArea().getSharedSquare();
+            sharedSudoku2.getSharedArea().setSharedSquare(sharedSquare);
+
+            // Try to solve the second Sudoku
+            if (solver2.solveMultiSudoku(0, 0)) {
+                return true; // Both Sudokus solved successfully
+            } else {
+                // If the second Sudoku cannot be solved, backtrack and try a different solution for the first Sudoku
+                solver1.reset(); // Reset the first Sudoku to try a different solution
+                return solveWithBacktracking(solver1, solver2); // Recursively try again
+            }
+        }
+        return false; // No solution found for the first Sudoku
     }
 
 }

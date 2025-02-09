@@ -48,4 +48,16 @@ public class SharedArea extends Sudoku {
             System.out.println();
         }
     }
+
+    public int[][] getSharedSquare() {
+        return this.getBoard();
+    }
+
+    public void setSharedSquare(int[][] sharedSquare1) {
+        this.setBoard(sharedSquare1);
+    }
+
+    public void setBoard(int[][] board) {
+        this.board = board;
+    }
 }

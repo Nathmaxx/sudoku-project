@@ -2,7 +2,7 @@ package Model;
 
 public class Sudoku {
 
-    private int[][] board;
+    int[][] board;
 
     public Sudoku(int[][] board) {
         this.board = board;
