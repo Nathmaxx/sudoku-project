@@ -1,18 +1,62 @@
-## Getting Started
+# Projet Sudoku Solver
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+## Prérequis
 
-## Folder Structure
+Avant de lancer le projet, assurez-vous d'avoir les éléments suivants installés sur votre machine :
 
-The workspace contains two folders by default, where:
+- **Java Development Kit (JDK) 11 ou supérieur**
+- **JavaFX SDK** (compatible avec votre version de JDK)
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## Installation
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+### 1. Installation de JavaFX
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+Si JavaFX n'est pas inclus dans votre JDK, téléchargez-le depuis :  
+[JavaFX SDK - Gluon](https://gluonhq.com/products/javafx/)
 
-## Dependency Management
+Extrayez l'archive dans un répertoire accessible, par exemple :
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+- `C:\javafx` sous **Windows**
+- `~/javafx` sous **Linux/Mac**
+
+### 2. Ajout de JavaFX au projet
+
+Si vous utilisez un IDE comme **IntelliJ IDEA** ou **Eclipse** :
+
+1. Ajoutez JavaFX comme une bibliothèque externe en incluant les fichiers JAR situés dans `lib` du dossier JavaFX.
+2. Ajoutez les arguments VM suivants lors de l'exécution du programme :
+
+#### Windows :
+
+```sh
+--module-path "C:\javafx\lib" --add-modules javafx.controls,javafx.fxml
+```
+
+#### Linux/Mac :
+
+```sh
+--module-path ~/javafx/lib --add-modules javafx.controls,javafx.fxml
+```
+
+## Compilation et Exécution
+
+### Avec IntelliJ IDEA :
+
+1. Ouvrez le projet.
+2. Configurez **JavaFX** dans les paramètres du projet.
+3. Ajoutez les arguments VM mentionnés ci-dessus.
+4. Exécutez la classe principale contenant `public static void main(String[] args)`.
+
+### Avec la ligne de commande :
+
+#### Compilation :
+
+```sh
+javac --module-path "path/to/javafx" --add-modules javafx.controls,javafx.fxml -d out $(find src -name "*.java")
+```
+
+#### Exécution :
+
+```sh
+java --module-path "path/to/javafx" --add-modules javafx.controls,javafx.fxml -cp out Main
+```
