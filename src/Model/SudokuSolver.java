@@ -23,6 +23,7 @@ public class SudokuSolver {
      * Constructeur par défaut.
      */
     public SudokuSolver() {
+        super();
     }
 
     /**
