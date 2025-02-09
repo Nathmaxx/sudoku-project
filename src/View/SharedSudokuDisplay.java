@@ -2,7 +2,6 @@ package View;
 
 import Model.SharedSudoku;
 import Model.SharedArea;
-import Model.Solver;
 import Model.SudokuCreator;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -12,16 +11,40 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert.AlertType;
 
+/**
+ * Classe représentant l'affichage d'un Sudoku partagé.
+ * Gère l'affichage des grilles de Sudoku partagées et les interactions avec
+ * l'utilisateur.
+ */
 public class SharedSudokuDisplay extends BaseView {
 
+    /** Premier Sudoku partagé */
     private SharedSudoku sharedSudoku1;
+
+    /** Deuxième Sudoku partagé */
     private SharedSudoku sharedSudoku2;
+
+    /** Troisième Sudoku partagé */
     private SharedSudoku sharedSudoku3;
+
+    /** Modèle de Sudoku sélectionné */
     private String pattern;
+
+    /** Difficulté sélectionnée */
     private String difficulty;
+
+    /** Grille de Sudoku fusionnée pour l'affichage */
     private GridPane mergedSudokuGrid;
+
+    /** Bouton pour régénérer le Sudoku */
     private Button regenerateButton;
 
+    /**
+     * Constructeur pour initialiser l'affichage de Sudoku partagé.
+     *
+     * @param pattern    le modèle de Sudoku sélectionné
+     * @param difficulty la difficulté sélectionnée
+     */
     public SharedSudokuDisplay(String pattern, String difficulty) {
         super();
         this.difficulty = difficulty;
@@ -29,6 +52,10 @@ public class SharedSudokuDisplay extends BaseView {
         initializeUI();
     }
 
+    /**
+     * Initialise l'interface utilisateur de l'affichage de Sudoku partagé.
+     * Configure les composants et les ajoute à la scène.
+     */
     @Override
     protected void initializeUI() {
         System.out.println("Selected pattern: " + pattern);
@@ -56,6 +83,10 @@ public class SharedSudokuDisplay extends BaseView {
         mainView.setPadding(new Insets(20));
     }
 
+    /**
+     * Crée les Sudokus pour le modèle de pattern 1.
+     * Génère deux Sudokus partageant une zone commune.
+     */
     private void createPattern1Sudokus() {
         // Generate the first Sudoku
         SudokuCreator sudokuCreator1 = new SudokuCreator(9);
@@ -88,6 +119,10 @@ public class SharedSudokuDisplay extends BaseView {
         sharedSudoku2 = new SharedSudoku(board2, sharedArea);
     }
 
+    /**
+     * Crée les Sudokus pour le modèle de pattern 2.
+     * Génère trois Sudokus partageant des zones communes.
+     */
     private void createPattern2Sudokus() {
         // Generate the first Sudoku
         SudokuCreator sudokuCreator1 = new SudokuCreator(9);
@@ -143,6 +178,10 @@ public class SharedSudokuDisplay extends BaseView {
         sharedSudoku3 = new SharedSudoku(board3, sharedArea2);
     }
 
+    /**
+     * Crée la grille fusionnée de Sudoku pour l'affichage.
+     * Combine les grilles de Sudoku partagées en une seule grille pour l'affichage.
+     */
     private void createMergedSudokuGrid() {
         mergedSudokuGrid.getChildren().clear();
         int cellSize = 28;
@@ -240,6 +279,14 @@ public class SharedSudokuDisplay extends BaseView {
         }
     }
 
+    /**
+     * Résout le Multidoku en utilisant un algorithme de backtracking.
+     * Remplit les cellules vides avec des valeurs valides.
+     *
+     * @param row la ligne de départ
+     * @param col la colonne de départ
+     * @return true si le Multidoku est résolu, false sinon
+     */
     private boolean solveMultidoku(int row, int col) {
         // Check if we have reached the end of the grid
         if (row == 9) {
@@ -281,6 +328,15 @@ public class SharedSudokuDisplay extends BaseView {
         return false;
     }
 
+    /**
+     * Vérifie si un nombre peut être placé en toute sécurité à une position donnée.
+     * 
+     * @param sudoku le Sudoku à vérifier
+     * @param row    la ligne à vérifier
+     * @param col    la colonne à vérifier
+     * @param num    le nombre à vérifier
+     * @return true si le nombre peut être placé en toute sécurité, false sinon
+     */
     private boolean isValid(SharedSudoku sudoku, int row, int col, int num) {
         for (int x = 0; x < 9; x++) {
             if (sudoku.get(row, x) == num || sudoku.get(x, col) == num ||
@@ -291,6 +347,11 @@ public class SharedSudokuDisplay extends BaseView {
         return true;
     }
 
+    /**
+     * Résout les deux Sudokus partagés.
+     * Utilise un algorithme de backtracking pour remplir les cellules vides avec
+     * des valeurs valides.
+     */
     private void solveBothSudokus() {
         if (solveMultidoku(0, 0)) {
             createMergedSudokuGrid();
@@ -303,6 +364,11 @@ public class SharedSudokuDisplay extends BaseView {
         }
     }
 
+    /**
+     * Affiche une alerte avec un message donné.
+     *
+     * @param message le message à afficher dans l'alerte
+     */
     private void showAlert(String message) {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Information");
@@ -311,6 +377,11 @@ public class SharedSudokuDisplay extends BaseView {
         alert.showAndWait();
     }
 
+    /**
+     * Affiche une alerte avec un message donné.
+     *
+     * @param message le message à afficher dans l'alerte
+     */
     private void regenerateGrid() {
         if ("Pattern 1".equals(pattern)) {
             createPattern1Sudokus();
