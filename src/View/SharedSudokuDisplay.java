@@ -4,11 +4,13 @@ import Model.SharedSudoku;
 import Model.SharedArea;
 import Model.Solver;
 import Model.SudokuCreator;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert.AlertType;
 
 public class SharedSudokuDisplay extends BaseView {
 
@@ -18,13 +20,13 @@ public class SharedSudokuDisplay extends BaseView {
     private String pattern;
     private String difficulty;
     private GridPane mergedSudokuGrid;
+    private Button regenerateButton;
 
     public SharedSudokuDisplay(String pattern, String difficulty) {
         super();
         this.difficulty = difficulty;
         this.pattern = pattern;
         initializeUI();
-
     }
 
     @Override
@@ -45,7 +47,11 @@ public class SharedSudokuDisplay extends BaseView {
         Button solveButton = new Button("Solve Sudoku");
         solveButton.setOnAction(event -> solveBothSudokus());
 
-        mainView.getChildren().addAll(mergedSudokuGrid, solveButton);
+        regenerateButton = new Button("Regenerate Grid");
+        regenerateButton.setOnAction(event -> regenerateGrid());
+        regenerateButton.setVisible(false);
+
+        mainView.getChildren().addAll(mergedSudokuGrid, solveButton, regenerateButton);
         mainView.setAlignment(Pos.CENTER);
         mainView.setPadding(new Insets(20));
     }
@@ -234,36 +240,84 @@ public class SharedSudokuDisplay extends BaseView {
         }
     }
 
-    private void solveBothSudokus() {
-        Solver solver1 = new Solver(sharedSudoku1);
-        Solver solver2 = new Solver(sharedSudoku2);
-
-        // Solve the first Sudoku
-        if (solveWithBacktracking(solver1, solver2)) {
-            createMergedSudokuGrid();
-            System.out.println("Both Sudokus solved!");
-        } else {
-            System.out.println("Unable to solve both Sudokus.");
-        }
-    }
-
-    private boolean solveWithBacktracking(Solver solver1, Solver solver2) {
-        // Try to solve the first Sudoku
-        if (solver1.solveMultiSudoku(0, 0)) {
-            // Update the shared area in the second Sudoku
-            int[][] sharedSquare = sharedSudoku1.getSharedArea().getSharedSquare();
-            sharedSudoku2.getSharedArea().setSharedSquare(sharedSquare);
-
-            // Try to solve the second Sudoku
-            if (solver2.solveMultiSudoku(0, 0)) {
-                return true; // Both Sudokus solved successfully
-            } else {
-                // If the second Sudoku cannot be solved, backtrack and try a different solution for the first Sudoku
-                solver1.reset(); // Reset the first Sudoku to try a different solution
-                return solveWithBacktracking(solver1, solver2); // Recursively try again
+    private boolean solveMultidoku(int row, int col) {
+        // Check if we have reached the end of the grid
+        if (row == 9) {
+            row = 0;
+            if (++col == 9) {
+                return true; // All cells are filled
             }
         }
-        return false; // No solution found for the first Sudoku
+        if (sharedSudoku1.get(row, col) != 0) {
+            return solveMultidoku(row + 1, col);
+        }
+
+        for (int num = 1; num <= 9; num++) {
+            if (isValid(sharedSudoku1, row, col, num) &&
+                    isValid(sharedSudoku2, row, col, num) &&
+                    (sharedSudoku3 == null || isValid(sharedSudoku3, row, col, num))) {
+
+                sharedSudoku1.set(row, col, num);
+                if (row >= 6 && col >= 6) {
+                    sharedSudoku2.set(row - 6, col - 6, num);
+                    if (sharedSudoku3 != null && row >= 12 && col >= 12) {
+                        sharedSudoku3.set(row - 12, col - 12, num);
+                    }
+                }
+
+                if (solveMultidoku(row + 1, col)) {
+                    return true;
+                }
+
+                sharedSudoku1.set(row, col, 0);
+                if (row >= 6 && col >= 6) {
+                    sharedSudoku2.set(row - 6, col - 6, 0);
+                    if (sharedSudoku3 != null && row >= 12 && col >= 12) {
+                        sharedSudoku3.set(row - 12, col - 12, 0);
+                    }
+                }
+            }
+        }
+        return false;
     }
 
+    private boolean isValid(SharedSudoku sudoku, int row, int col, int num) {
+        for (int x = 0; x < 9; x++) {
+            if (sudoku.get(row, x) == num || sudoku.get(x, col) == num ||
+                    sudoku.get(row - row % 3 + x / 3, col - col % 3 + x % 3) == num) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void solveBothSudokus() {
+        if (solveMultidoku(0, 0)) {
+            createMergedSudokuGrid();
+            System.out.println("All Sudokus solved!");
+            regenerateButton.setVisible(false);
+        } else {
+            System.out.println("Unable to solve all Sudokus.");
+            showAlert("Unable to solve the Sudoku. Please try regenerating the grid.");
+            regenerateButton.setVisible(true);
+        }
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Information");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void regenerateGrid() {
+        if ("Pattern 1".equals(pattern)) {
+            createPattern1Sudokus();
+        } else if ("Pattern 2".equals(pattern)) {
+            createPattern2Sudokus();
+        }
+        createMergedSudokuGrid();
+        regenerateButton.setVisible(false);
+    }
 }
