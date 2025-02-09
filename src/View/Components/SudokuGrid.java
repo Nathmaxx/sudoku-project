@@ -5,23 +5,48 @@ import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
+/**
+ * Classe représentant la grille de Sudoku dans l'interface utilisateur.
+ * Gère l'affichage et les interactions avec la grille de Sudoku.
+ */
 public class SudokuGrid extends GridPane {
+
+    /** Sudoku affiché dans la grille */
     private Sudoku sudoku;
+
+    /** Cellules du sudoku */
     private TextField[][] cells;
 
+    /**
+     * Constructeur par défaut pour initialiser une grille de Sudoku vide.
+     */
     public SudokuGrid() {
     }
 
+    /**
+     * Constructeur pour initialiser une grille de Sudoku avec un Sudoku donné.
+     *
+     * @param sudoku le Sudoku à afficher dans la grille
+     */
     public SudokuGrid(Sudoku sudoku) {
         this.sudoku = sudoku;
         displaySudoku();
     }
 
+    /**
+     * Définit le Sudoku à afficher dans la grille.
+     *
+     * @param sudoku le Sudoku à afficher
+     */
     public void setSudoku(Sudoku sudoku) {
         this.sudoku = sudoku;
         displaySudoku();
     }
 
+    /**
+     * Affiche le Sudoku dans la grille.
+     * Met à jour les cellules de la grille avec les valeurs du Sudoku.
+     */
     public void displaySudoku() {
         this.getChildren().clear();
         int size = sudoku.getSize();
@@ -81,6 +106,10 @@ public class SudokuGrid extends GridPane {
         }
     }
 
+    /**
+     * Met à jour l'affichage de la grille de Sudoku.
+     * Met à jour les cellules de la grille avec les valeurs actuelles du Sudoku.
+     */
     public void updateDisplay() {
         int size = sudoku.getSize();
         for (int row = 0; row < size; row++) {
@@ -95,10 +124,20 @@ public class SudokuGrid extends GridPane {
         }
     }
 
+    /**
+     * Retourne les cellules de la grille de Sudoku.
+     *
+     * @return un tableau 2D de TextField représentant les cellules de la grille
+     */
     public TextField[][] getCells() {
         return cells;
     }
 
+    /**
+     * Retourne le Sudoku actuellement affiché dans la grille.
+     *
+     * @return le Sudoku actuellement affiché
+     */
     public Sudoku getSudoku() {
         return sudoku;
     }
