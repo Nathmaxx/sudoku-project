@@ -1,11 +1,7 @@
 package View;
 
-import java.util.List;
-import java.util.Map;
-
 import Controller.NavigationController;
 import Controller.SudokuController;
-import Model.Solver;
 import Model.Sudoku;
 import View.Components.HomeButton;
 import View.Components.SizeComboBox;
@@ -25,7 +21,6 @@ public class Generation extends BaseView {
     private SudokuController sudokuController;
 
     private int gridSize = 9;
-    private int currentStepIndex = 0;
 
     private Sudoku currentSudoku;
 
@@ -34,9 +29,7 @@ public class Generation extends BaseView {
     private SudokuGrid sudokuGrid;
 
     private Button solveSudokuButton;
-    private Button solveSudokuWithStepButton;
 
-    private List<Map.Entry<Integer, Integer>> steps;
     private ProgressBar progressBar;
 
     public Generation(ViewManager viewManager) {
@@ -93,40 +86,10 @@ public class Generation extends BaseView {
         solveSudokuButton.setVisible(false);
         solveSudokuButton.setOnAction(event -> sudokuController.solveSudoku(currentSudoku));
 
-        // Bouton permettanst de résoudre l'étape suivante
-        this.solveSudokuWithStepButton = new Button("Résoudre l'étape suivante");
-        solveSudokuWithStepButton.setVisible(false);
-        solveSudokuWithStepButton.setOnAction(event -> {
-            if (currentSudoku != null) {
-                System.out.println("Solving step " + currentStepIndex);
-                if (steps == null) {
-                    System.out.println("First IF Solving Sudoku with steps");
-                    Solver solver = new Solver(currentSudoku);
-                    steps = solver.solveSudokuWithSteps(0, 0);
-                    currentStepIndex = 0;
-                    System.out.println("Nombre d'étapes: " + steps.size());
-                }
-                if (currentStepIndex < steps.size()) {
-                    Map.Entry<Integer, Integer> step = steps.get(currentStepIndex);
-                    int position = step.getKey();
-                    int value = step.getValue();
-                    int row = position / currentSudoku.getSize();
-                    int col = position % currentSudoku.getSize();
-                    currentSudoku.set(row, col, value);
-                    System.out.println("Setting " + value + " at position " + row + ", " + col);
-                    displaySudoku(currentSudoku);
-                    System.out.println("Step " + currentStepIndex + " done");
-                    currentStepIndex++;
-                } else {
-                    System.out.println("Sudoku solved");
-                }
-            }
-        });
-
         // HBox contenant les boutons de résolution
         HBox solveButtonsHBox = new HBox(20);
         solveButtonsHBox.setAlignment(Pos.CENTER);
-        solveButtonsHBox.getChildren().addAll(solveSudokuButton, solveSudokuWithStepButton);
+        solveButtonsHBox.getChildren().addAll(solveSudokuButton);
 
         // Ajout de tous les éléments dans la vue principale
         mainView.getChildren().addAll(homeVBox,
@@ -143,7 +106,6 @@ public class Generation extends BaseView {
 
     public void showSolveButtons() {
         solveSudokuButton.setVisible(true);
-        solveSudokuWithStepButton.setVisible(true);
     }
 
     public String getDifficulty() {
