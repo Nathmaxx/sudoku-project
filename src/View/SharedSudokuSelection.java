@@ -30,7 +30,7 @@ public class SharedSudokuSelection extends BaseView {
     public SharedSudokuSelection(ViewManager vm) {
         super();
         this.navigationController = new NavigationController(vm);
-        this.multidokuController = new MultidokuController(this);
+        this.multidokuController = new MultidokuController(this, vm);
         initializeUI();
 
     }

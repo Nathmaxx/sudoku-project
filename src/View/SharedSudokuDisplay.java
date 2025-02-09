@@ -1,12 +1,15 @@
 package View;
 
 import Model.SharedSudoku;
+import Controller.NavigationController;
 import Model.SharedArea;
 import Model.SudokuCreator;
+import View.Components.HomeButton;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import utils.ViewManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert.AlertType;
@@ -17,6 +20,8 @@ import javafx.scene.control.Alert.AlertType;
  * l'utilisateur.
  */
 public class SharedSudokuDisplay extends BaseView {
+
+    private NavigationController nc;
 
     /** Premier Sudoku partagé */
     private SharedSudoku sharedSudoku1;
@@ -45,10 +50,11 @@ public class SharedSudokuDisplay extends BaseView {
      * @param pattern    le modèle de Sudoku sélectionné
      * @param difficulty la difficulté sélectionnée
      */
-    public SharedSudokuDisplay(String pattern, String difficulty) {
+    public SharedSudokuDisplay(String pattern, String difficulty, ViewManager vm) {
         super();
         this.difficulty = difficulty;
         this.pattern = pattern;
+        this.nc = new NavigationController(vm);
         initializeUI();
     }
 
@@ -67,6 +73,8 @@ public class SharedSudokuDisplay extends BaseView {
             createPattern2Sudokus();
         }
 
+        HomeButton homeButton = new HomeButton(nc);
+
         mergedSudokuGrid = new GridPane();
         mergedSudokuGrid.setPadding(new Insets(30));
         createMergedSudokuGrid();
@@ -78,7 +86,7 @@ public class SharedSudokuDisplay extends BaseView {
         regenerateButton.setOnAction(event -> regenerateGrid());
         regenerateButton.setVisible(false);
 
-        mainView.getChildren().addAll(mergedSudokuGrid, solveButton, regenerateButton);
+        mainView.getChildren().addAll(homeButton, mergedSudokuGrid, solveButton, regenerateButton);
         mainView.setAlignment(Pos.CENTER);
         mainView.setPadding(new Insets(20));
     }
