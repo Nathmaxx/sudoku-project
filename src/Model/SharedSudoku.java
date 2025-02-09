@@ -142,8 +142,6 @@ public class SharedSudoku extends Sudoku implements SharedAreaListener {
                         Integer[] coordinates = entry.getKey();
                         int x1 = coordinates[0];
                         int y1 = coordinates[1];
-                        int x2 = coordinates[2];
-                        int y2 = coordinates[3];
                         i = i + x1;
                         j = j + y1;
                         this.set(i, j, value);

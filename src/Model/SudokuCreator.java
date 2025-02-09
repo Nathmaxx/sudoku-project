@@ -194,7 +194,6 @@ public class SudokuCreator {
      * @return true si le remplissage est réussi, false sinon
      */
     private void fillRemainingCells() {
-        int size = this.sudoku.getSize();
         Solver solver = new Solver(this.sudoku);
         solver.solveSudoku(0, 0);
     }

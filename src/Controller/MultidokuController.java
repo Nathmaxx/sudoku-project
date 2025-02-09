@@ -15,6 +15,7 @@ public class MultidokuController {
     /** Sélection de Sudoku partagé */
     private SharedSudokuSelection sharedSudokuSelection;
 
+    /** Manager de vue */
     private ViewManager vm;
 
     /**

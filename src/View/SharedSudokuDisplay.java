@@ -21,6 +21,7 @@ import javafx.scene.control.Alert.AlertType;
  */
 public class SharedSudokuDisplay extends BaseView {
 
+    /** Contrôleur gérant la navigation */
     private NavigationController nc;
 
     /** Premier Sudoku partagé */
